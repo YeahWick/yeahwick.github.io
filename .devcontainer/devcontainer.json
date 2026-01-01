@@ -14,5 +14,5 @@
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek/deepseek-v3.2",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek/deepseek-v3.2",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek/deepseek-v3.2"
-
+  }
 }
