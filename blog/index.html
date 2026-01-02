@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YeahWick's Blog</title>
+    <title>All Blog Posts - YeahWick's Blog</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -83,13 +83,12 @@
             transform: translateY(-2px);
         }
 
-        .hero {
+        .page-header {
             text-align: center;
-            padding: 50px 20px;
             margin-bottom: 40px;
         }
 
-        .hero h1 {
+        .page-header h1 {
             font-size: 3rem;
             margin-bottom: 20px;
             background: linear-gradient(90deg, #ffcc00, #ff3366, #00ccff);
@@ -99,39 +98,9 @@
             text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
-
-        .button {
-            display: inline-block;
-            background: linear-gradient(to bottom, #ff3366, #cc0055);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
-                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
-                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
-            background: linear-gradient(to bottom, #ff4488, #dd0066);
-        }
-
-        .content-grid {
+        .posts-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
@@ -139,6 +108,9 @@
         .blog-post {
             padding: 25px;
             transition: transform 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .blog-post:hover {
@@ -157,6 +129,36 @@
             margin-bottom: 15px;
             font-size: 0.9rem;
             color: #aaccff;
+        }
+
+        .post-excerpt {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            display: inline-block;
+            background: linear-gradient(to bottom, #ff3366, #cc0055);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
+                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .read-more:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
+                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
+            background: linear-gradient(to bottom, #ff4488, #dd0066);
         }
 
         .footer {
@@ -198,11 +200,11 @@
                 flex-wrap: wrap;
             }
 
-            .hero h1 {
+            .page-header h1 {
                 font-size: 2rem;
             }
 
-            .content-grid {
+            .posts-container {
                 grid-template-columns: 1fr;
             }
         }
@@ -222,53 +224,43 @@
             </nav>
         </header>
 
-        <!-- Hero Section -->
-        <section class="hero card">
-            <h1>Welcome to YeahWick's Blog</h1>
-            <p>Join me on adventures through code, technology, and digital creativity!</p>
-            <div style="margin: 30px 0;">
-                <a href="/blog/" class="button"><i class="fas fa-play-circle"></i> START READING</a>
-            </div>
+        <!-- Page Header -->
+        <section class="page-header card">
+            <h1>All Blog Posts</h1>
+            <p>Discover all articles from YeahWick's Blog</p>
         </section>
 
         <!-- Blog Posts -->
-        <section class="card">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <h2><i class="fas fa-newspaper"></i> LATEST BLOG POSTS</h2>
-            </div>
+        <section class="posts-container">
+            <article class="card blog-post">
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> March 15, 2025</span>
+                    <span><i class="far fa-clock"></i> 8 min read</span>
+                </div>
+                <h3>Building Modern Web Applications</h3>
+                <p class="post-excerpt">In today's rapidly evolving tech landscape, building modern web applications requires a combination of cutting-edge technologies and well-established best practices. In this article, I'll walk you through my approach to creating robust, scalable, and maintainable web applications...</p>
+                <a href="/blog/building-modern-web-applications.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-            <div class="content-grid">
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> March 15, 2025</span>
-                        <span><i class="far fa-eye"></i> 1.2K views</span>
-                    </div>
-                    <h3><a href="/blog/building-modern-web-applications.html" style="color: #ffcc00; text-decoration: none;">Building Modern Web Applications</a></h3>
-                    <p>How I built a cutting-edge web application using modern JavaScript frameworks and best practices.</p>
-                </article>
+            <article class="card blog-post">
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> March 8, 2025</span>
+                    <span><i class="far fa-clock"></i> 6 min read</span>
+                </div>
+                <h3>Web Development Trends in 2025</h3>
+                <p class="post-excerpt">As we progress further into 2025, the web development landscape continues to evolve at a rapid pace. New technologies, frameworks, and methodologies are emerging that promise to reshape how we build and interact with web applications. In this article, I'll explore the most significant trends shaping the future...</p>
+                <a href="/blog/web-development-trends-2025.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+            </article>
 
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> March 8, 2025</span>
-                        <span><i class="far fa-eye"></i> 2.4K views</span>
-                    </div>
-                    <h3><a href="/blog/web-development-trends-2025.html" style="color: #ffcc00; text-decoration: none;">Web Development Trends in 2025</a></h3>
-                    <p>Exploring the latest trends in web development and how they're shaping the future of the web.</p>
-                </article>
-
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> March 1, 2025</span>
-                        <span><i class="far fa-eye"></i> 3.1K views</span>
-                    </div>
-                    <h3><a href="/blog/creative-css-techniques.html" style="color: #ffcc00; text-decoration: none;">Creative CSS Techniques</a></h3>
-                    <p>Learn advanced CSS techniques to create stunning visual effects and modern user interfaces.</p>
-                </article>
-            </div>
-
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="/blog/" class="button"><i class="fas fa-arrow-right"></i> VIEW ALL POSTS</a>
-            </div>
+            <article class="card blog-post">
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> March 1, 2025</span>
+                    <span><i class="far fa-clock"></i> 7 min read</span>
+                </div>
+                <h3>Creative CSS Techniques</h3>
+                <p class="post-excerpt">CSS has evolved far beyond simple styling rules. Modern CSS offers incredible capabilities for creating stunning visual effects and animations that were previously only possible with heavy JavaScript libraries or even Flash. In this article, I'll share some of my favorite creative CSS techniques...</p>
+                <a href="/blog/creative-css-techniques.html" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+            </article>
         </section>
 
         <!-- Footer -->
@@ -293,7 +285,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Add hover effect to buttons
-            const buttons = document.querySelectorAll('.button');
+            const buttons = document.querySelectorAll('.read-more');
             buttons.forEach(button => {
                 button.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px) scale(1.05)';
@@ -307,11 +299,14 @@
             // Add click effect to blog posts
             const posts = document.querySelectorAll('.blog-post');
             posts.forEach(post => {
-                post.addEventListener('click', function() {
-                    this.style.transform = 'scale(0.98)';
-                    setTimeout(() => {
-                        this.style.transform = '';
-                    }, 150);
+                post.addEventListener('click', function(e) {
+                    // Only trigger if clicking on the post itself, not on links
+                    if (e.target.tagName !== 'A') {
+                        this.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    }
                 });
             });
         });
