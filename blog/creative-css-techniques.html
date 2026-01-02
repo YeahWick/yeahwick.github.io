@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative CSS Techniques - YeahWick's Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 50%, #2a2a6a 100%);
+            color: #e0e0ff;
+            min-height: 100vh;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
+                        0 1px 8px rgba(255, 255, 255, 0.1) inset,
+                        0 -1px 8px rgba(0, 0, 0, 0.2) inset;
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #ff3366, #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #aaccff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .post-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #aaccff;
+        }
+
+        .post-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .post-content h2 {
+            color: #ffcc00;
+            margin: 30px 0 15px 0;
+        }
+
+        .post-content p {
+            margin-bottom: 20px;
+        }
+
+        .post-content ul, .post-content ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .post-content li {
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            background: linear-gradient(to bottom, #ff3366, #cc0055);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
+                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
+                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
+            background: linear-gradient(to bottom, #ff4488, #dd0066);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8899cc;
+            font-size: 0.9rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .social-icons a {
+            color: #aaccff;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #ff3366;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .post-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header card">
+            <div class="logo">
+                <div class="logo-text">YEAHWICK'S BLOG</div>
+            </div>
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
+                <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </header>
+
+        <!-- Blog Post -->
+        <article class="card">
+            <div class="post-header">
+                <h1>Creative CSS Techniques</h1>
+                <div class="post-meta">
+                    <span><i class="far fa-calendar"></i> March 1, 2025</span>
+                    <span><i class="far fa-clock"></i> 7 min read</span>
+                    <span><i class="far fa-eye"></i> 3.1K views</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+                <p>CSS has evolved far beyond simple styling rules. Modern CSS offers incredible capabilities for creating stunning visual effects and animations that were previously only possible with heavy JavaScript libraries or even Flash. In this article, I'll share some of my favorite creative CSS techniques that can elevate your web designs.</p>
+
+                <h2>Pure CSS Animations</h2>
+                <p>CSS animations provide a lightweight way to add motion and life to your interfaces. With keyframe animations, you can create complex sequences with minimal code.</p>
+
+                <h3>Example: Floating Particles Effect</h3>
+                <pre><code>@keyframes float {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+.particle {
+  animation: float 3s ease-in-out infinite;
+  animation-delay: calc(var(--delay) * 1s);
+}</code></pre>
+
+                <p>This technique can create mesmerizing background effects or draw attention to important elements on your page.</p>
+
+                <h2>CSS Clip-Path Magic</h2>
+                <p>The clip-path property allows you to create complex shapes and masking effects that were previously impossible with traditional CSS.</p>
+
+                <h3>Example: Polygonal Image Containers</h3>
+                <pre><code>.diamond-image {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transition: clip-path 0.3s ease;
+}
+
+.diamond-image:hover {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}</code></pre>
+
+                <p>This creates dynamic shape transformations that add visual interest to image galleries or hero sections.</p>
+
+                <h2>Advanced Gradient Techniques</h2>
+                <p>Modern CSS gradients go far beyond simple two-color linear gradients. Conic gradients and complex layering create effects that seem almost magical.</p>
+
+                <h3>Example: Rainbow Text Effect</h3>
+                <pre><code>.rainbow-text {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    red, orange, yellow, green, blue, indigo, violet, red
+  );
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { background-position: 0% 0%; }
+  to { background-position: 200% 0%; }
+}</code></pre>
+
+                <h2>CSS Variable Driven Interactions</h2>
+                <p>CSS variables (custom properties) combined with JavaScript enable dynamic styling that adapts to user interactions or data.</p>
+
+                <h3>Example: Dynamic Theme Colors</h3>
+                <pre><code>:root {
+  --primary-color: #3498db;
+  --accent-color: #e74c3c;
+  --transition-speed: 0.3s;
+}
+
+.themed-element {
+  background: var(--primary-color);
+  transition: background var(--transition-speed);
+}
+
+[data-theme="dark"] {
+  --primary-color: #2c3e50;
+  --accent-color: #c0392b;
+}</code></pre>
+
+                <h2>3D Transformations with CSS</h2>
+                <p>CSS 3D transforms can create impressive depth effects that enhance user experience without heavy libraries.</p>
+
+                <h3>Example: Card Flip Effect</h3>
+                <pre><code>.flip-card {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}</code></pre>
+
+                <h2>Conclusion</h2>
+                <p>These advanced CSS techniques demonstrate the power of modern styling capabilities. As browser support continues to improve, these methods become increasingly viable for production sites. Experimentation with these techniques can lead to unique, memorable user experiences that set your projects apart.</p>
+
+                <p>The key to mastering creative CSS is practice and experimentation. Start with small implementations and gradually incorporate more complex effects as your confidence grows. Always consider performance implications and ensure accessibility is maintained even with elaborate visual treatments.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/blog/" class="back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="footer card">
+            <div style="margin-bottom: 20px;">
+                <div class="logo-text" style="font-size: 2rem;">YEAHWICK'S BLOG</div>
+                <p style="margin-top: 10px;">Where technology meets creativity</p>
+            </div>
+
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <p>© 2025 YeahWick's Blog. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
