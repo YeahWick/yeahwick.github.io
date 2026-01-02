@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Homepage created with Web 2.0 and pixel game graphics themes -->
-    <title>Winston's Pixel Blog - Web 2.0 Style</title>
+    <title>YeahWick's Blog</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset and base styles */
         * {
             margin: 0;
             padding: 0;
@@ -29,8 +27,7 @@
             padding: 20px;
         }
 
-        /* Web 2.0 Styling */
-        .web2-card {
+        .card {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -40,153 +37,8 @@
             backdrop-filter: blur(10px);
             padding: 30px;
             margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
         }
 
-        .web2-card::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(45deg, #ff00cc, #3333ff, #00ccff, #ffcc00);
-            z-index: -1;
-            filter: blur(20px);
-            opacity: 0.3;
-            border-radius: 30px;
-        }
-
-        .web2-header {
-            background: linear-gradient(90deg, #ff3366, #6633ff);
-            border-radius: 15px 15px 0 0;
-            padding: 25px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3),
-                        0 1px 3px rgba(255, 255, 255, 0.1) inset;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .web2-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #00ffff, transparent);
-            opacity: 0.6;
-        }
-
-        .web2-button {
-            display: inline-block;
-            background: linear-gradient(to bottom, #ff3366, #cc0055);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
-                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .web2-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
-                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
-            background: linear-gradient(to bottom, #ff4488, #dd0066);
-        }
-
-        .web2-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 3px 10px rgba(255, 51, 102, 0.4),
-                        0 1px 3px rgba(0, 0, 0, 0.2) inset;
-        }
-
-        .web2-button::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(30deg);
-            transition: all 0.5s ease;
-        }
-
-        /* Pixel Game Theme */
-        .pixel-border {
-            border: 4px solid #8b4513;
-            border-image: repeating-linear-gradient(45deg, #8b4513, #a0522d 10px, #8b4513 20px) 10;
-            image-rendering: pixelated;
-            position: relative;
-        }
-
-        .pixel-art {
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-
-        .pixel-font {
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .pixel-bg {
-            background-color: #2d2d2d;
-            background-image:
-                linear-gradient(45deg, #222 25%, transparent 25%),
-                linear-gradient(-45deg, #222 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #222 75%),
-                linear-gradient(-45deg, transparent 75%, #222 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-
-        .pixel-character {
-            width: 64px;
-            height: 64px;
-            background: #ff3366;
-            position: relative;
-            image-rendering: pixelated;
-            margin: 0 auto;
-            transform: scale(2);
-        }
-
-        .pixel-character::before,
-        .pixel-character::after {
-            content: '';
-            position: absolute;
-            background: #333;
-        }
-
-        .pixel-character::before {
-            width: 20px;
-            height: 20px;
-            top: 10px;
-            left: 10px;
-            box-shadow: 24px 0 #333;
-        }
-
-        .pixel-character::after {
-            width: 64px;
-            height: 10px;
-            bottom: -10px;
-            left: 0;
-        }
-
-        /* Layout */
         .header {
             display: flex;
             justify-content: space-between;
@@ -238,7 +90,7 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             background: linear-gradient(90deg, #ffcc00, #ff3366, #00ccff);
             -webkit-background-clip: text;
@@ -248,10 +100,33 @@
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto 30px;
             line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(to bottom, #ff3366, #cc0055);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
+                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
+                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
+            background: linear-gradient(to bottom, #ff4488, #dd0066);
         }
 
         .content-grid {
@@ -267,7 +142,7 @@
         }
 
         .blog-post:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
 
         .blog-post h3 {
@@ -282,60 +157,6 @@
             margin-bottom: 15px;
             font-size: 0.9rem;
             color: #aaccff;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .tag {
-            background: rgba(255, 51, 102, 0.2);
-            color: #ff99cc;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(255, 51, 102, 0.3);
-        }
-
-        .pixel-game-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .pixel-game-card {
-            flex: 1;
-            min-width: 300px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .pixel-canvas {
-            width: 100%;
-            height: 200px;
-            background: #111;
-            border: 3px solid #8b4513;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pixel {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ff3366;
-            animation: pixelFloat 3s infinite ease-in-out;
-        }
-
-        @keyframes pixelFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         .footer {
@@ -365,7 +186,6 @@
             transform: scale(1.2);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -379,231 +199,101 @@
             }
 
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .content-grid {
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #ff3366, #6633ff);
-            border-radius: 10px;
-            border: 2px solid #0a0a2a;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #ff4488, #7744ff);
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
-        <header class="header web2-card">
+        <header class="header card">
             <div class="logo">
-                <div class="pixel-character"></div>
-                <div class="logo-text">WINSTON'S BLOG</div>
+                <div class="logo-text">YEAHWICK'S BLOG</div>
             </div>
             <nav class="nav-links">
                 <a href="#"><i class="fas fa-home"></i> Home</a>
-                <a href="#"><i class="fas fa-gamepad"></i> Games</a>
                 <a href="#"><i class="fas fa-blog"></i> Blog</a>
-                <a href="#"><i class="fas fa-images"></i> Gallery</a>
                 <a href="#"><i class="fas fa-envelope"></i> Contact</a>
             </nav>
         </header>
 
         <!-- Hero Section -->
-        <section class="hero web2-card">
-            <h1>WELCOME TO THE PIXEL REALM</h1>
-            <p>Where Web 2.0 aesthetics meet retro gaming nostalgia. Join me on adventures through code, game development, and digital art!</p>
+        <section class="hero card">
+            <h1>Welcome to YeahWick's Blog</h1>
+            <p>Join me on adventures through code, technology, and digital creativity!</p>
             <div style="margin: 30px 0;">
-                <a href="#" class="web2-button"><i class="fas fa-play-circle"></i> START READING</a>
-                <a href="#" class="web2-button" style="background: linear-gradient(to bottom, #3366ff, #0033cc); margin-left: 15px;"><i class="fas fa-download"></i> SUBSCRIBE</a>
+                <a href="#" class="button"><i class="fas fa-play-circle"></i> START READING</a>
             </div>
         </section>
 
-        <!-- Pixel Game Section -->
-        <div class="pixel-game-section">
-            <div class="web2-card pixel-game-card pixel-border">
-                <h2 style="color: #ffcc00; margin-bottom: 20px;"><i class="fas fa-gamepad"></i> PIXEL GAME DEV LOG</h2>
-                <div class="pixel-canvas">
-                    <!-- Animated pixels -->
-                    <div class="pixel" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
-                    <div class="pixel" style="left: 30%; top: 40%; animation-delay: 0.5s; background: #00ccff;"></div>
-                    <div class="pixel" style="left: 50%; top: 60%; animation-delay: 1s; background: #ffcc00;"></div>
-                    <div class="pixel" style="left: 70%; top: 30%; animation-delay: 1.5s; background: #33ff66;"></div>
-                    <div class="pixel" style="left: 90%; top: 50%; animation-delay: 2s; background: #ff3366;"></div>
-                </div>
-                <p>Follow my journey creating retro-inspired pixel games with modern web technologies. Weekly updates, tutorials, and free assets!</p>
-                <a href="#" class="web2-button" style="margin-top: 20px; background: linear-gradient(to bottom, #00cc66, #00994d);"><i class="fas fa-code"></i> VIEW PROJECTS</a>
-            </div>
-
-            <div class="web2-card pixel-game-card pixel-border">
-                <h2 style="color: #ffcc00; margin-bottom: 20px;"><i class="fas fa-palette"></i> PIXEL ART TUTORIALS</h2>
-                <div class="pixel-bg" style="height: 150px; margin: 20px 0; padding: 20px; display: flex; align-items: center; justify-content: center;">
-                    <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;">
-                        <!-- Pixel art pattern -->
-                        <div style="width: 12px; height: 12px; background: #ff3366;"></div>
-                        <div style="width: 12px; height: 12px; background: #ff9933;"></div>
-                        <div style="width: 12px; height: 12px; background: #ffcc00;"></div>
-                        <div style="width: 12px; height: 12px; background: #33ff66;"></div>
-                        <div style="width: 12px; height: 12px; background: #00ccff;"></div>
-                        <div style="width: 12px; height: 12px; background: #3366ff;"></div>
-                        <div style="width: 12px; height: 12px; background: #9933ff;"></div>
-                        <div style="width: 12px; height: 12px; background: #ff66cc;"></div>
-                    </div>
-                </div>
-                <p>Learn pixel art techniques, color theory for 8-bit graphics, and how to create your own game sprites. New tutorials every Friday!</p>
-                <a href="#" class="web2-button" style="margin-top: 20px; background: linear-gradient(to bottom, #ff9933, #cc6600);"><i class="fas fa-pencil-alt"></i> LEARN ART</a>
-            </div>
-        </div>
-
         <!-- Blog Posts -->
-        <section class="web2-card">
-            <div class="web2-header">
+        <section class="card">
+            <div style="text-align: center; margin-bottom: 30px;">
                 <h2><i class="fas fa-newspaper"></i> LATEST BLOG POSTS</h2>
-                <p>Fresh content from the pixel frontier</p>
             </div>
 
             <div class="content-grid">
-                <article class="web2-card blog-post">
+                <article class="card blog-post">
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> March 15, 2025</span>
                         <span><i class="far fa-eye"></i> 1.2K views</span>
                     </div>
-                    <h3>Building a Retro Game Engine with JavaScript</h3>
-                    <p>How I built a pixel-perfect game engine using modern JavaScript with WebGL rendering and authentic 8-bit sound emulation.</p>
-                    <div class="tags">
-                        <span class="tag">JavaScript</span>
-                        <span class="tag">Game Dev</span>
-                        <span class="tag">WebGL</span>
-                        <span class="tag">Tutorial</span>
-                    </div>
+                    <h3>Building Modern Web Applications</h3>
+                    <p>How I built a cutting-edge web application using modern JavaScript frameworks and best practices.</p>
                 </article>
 
-                <article class="web2-card blog-post">
+                <article class="card blog-post">
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> March 8, 2025</span>
                         <span><i class="far fa-eye"></i> 2.4K views</span>
                     </div>
-                    <h3>The Web 2.0 Revival: Why Glossy Buttons Are Back</h3>
-                    <p>Exploring the nostalgia-driven return of Web 2.0 design elements and how to implement them with modern CSS.</p>
-                    <div class="tags">
-                        <span class="tag">Design</span>
-                        <span class="tag">CSS</span>
-                        <span class="tag">Nostalgia</span>
-                        <span class="tag">Trends</span>
-                    </div>
+                    <h3>Web Development Trends in 2025</h3>
+                    <p>Exploring the latest trends in web development and how they're shaping the future of the web.</p>
                 </article>
 
-                <article class="web2-card blog-post">
+                <article class="card blog-post">
                     <div class="post-meta">
                         <span><i class="far fa-calendar"></i> March 1, 2025</span>
                         <span><i class="far fa-eye"></i> 3.1K views</span>
                     </div>
-                    <h3>Creating Pixel Art with CSS Gradients</h3>
-                    <p>You don't need images to create retro pixel art! Learn how to use CSS gradients and box-shadows to build 8-bit graphics.</p>
-                    <div class="tags">
-                        <span class="tag">CSS</span>
-                        <span class="tag">Pixel Art</span>
-                        <span class="tag">Creative</span>
-                        <span class="tag">Tutorial</span>
-                    </div>
+                    <h3>Creative CSS Techniques</h3>
+                    <p>Learn advanced CSS techniques to create stunning visual effects and modern user interfaces.</p>
                 </article>
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="#" class="web2-button"><i class="fas fa-arrow-right"></i> VIEW ALL POSTS</a>
-            </div>
-        </section>
-
-        <!-- Newsletter -->
-        <section class="web2-card" style="text-align: center;">
-            <h2 style="color: #00ccff; margin-bottom: 20px;"><i class="fas fa-envelope-open-text"></i> JOIN THE PIXEL NEWSLETTER</h2>
-            <p style="max-width: 600px; margin: 0 auto 25px;">Get weekly updates on game development, pixel art tutorials, and exclusive free assets delivered to your inbox.</p>
-
-            <div style="max-width: 500px; margin: 0 auto;">
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <input type="email" placeholder="Enter your email" style="
-                        flex: 1;
-                        padding: 15px;
-                        border-radius: 50px;
-                        border: 2px solid rgba(255, 255, 255, 0.2);
-                        background: rgba(255, 255, 255, 0.1);
-                        color: white;
-                        font-size: 1rem;
-                        outline: none;
-                    ">
-                    <button class="web2-button" style="background: linear-gradient(to bottom, #00ccff, #0066cc);">
-                        <i class="fas fa-paper-plane"></i> SUBSCRIBE
-                    </button>
-                </div>
-                <p style="font-size: 0.9rem; color: #aaccff;">
-                    <i class="fas fa-shield-alt"></i> No spam, unsubscribe anytime
-                </p>
+                <a href="#" class="button"><i class="fas fa-arrow-right"></i> VIEW ALL POSTS</a>
             </div>
         </section>
 
         <!-- Footer -->
-        <footer class="footer web2-card">
+        <footer class="footer card">
             <div style="margin-bottom: 20px;">
-                <div class="logo-text" style="font-size: 2rem;">WINSTON'S PIXEL BLOG</div>
-                <p style="margin-top: 10px;">Where retro gaming meets modern web design</p>
+                <div class="logo-text" style="font-size: 2rem;">YEAHWICK'S BLOG</div>
+                <p style="margin-top: 10px;">Where technology meets creativity</p>
             </div>
 
             <div class="social-icons">
                 <a href="#"><i class="fab fa-twitter"></i></a>
                 <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-twitch"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
             </div>
 
             <div style="margin-top: 20px;">
-                <p>© 2025 Winston's Pixel Blog. All rights reserved. | Made with <i class="fas fa-heart" style="color: #ff3366;"></i> and pixels</p>
-                <p style="margin-top: 10px; font-size: 0.8rem;">
-                    <a href="#" style="color: #aaccff; margin: 0 10px;">Privacy Policy</a> |
-                    <a href="#" style="color: #aaccff; margin: 0 10px;">Terms of Service</a> |
-                    <a href="#" style="color: #aaccff; margin: 0 10px;">Cookie Policy</a>
-                </p>
+                <p>© 2025 YeahWick's Blog. All rights reserved.</p>
             </div>
         </footer>
     </div>
 
     <script>
-        // Simple interactive pixel animation
         document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.querySelector('.pixel-canvas');
-            const colors = ['#ff3366', '#00ccff', '#ffcc00', '#33ff66', '#9933ff'];
-
-            // Add more floating pixels
-            for (let i = 0; i < 15; i++) {
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel';
-                pixel.style.left = Math.random() * 90 + '%';
-                pixel.style.top = Math.random() * 90 + '%';
-                pixel.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                pixel.style.animationDelay = Math.random() * 3 + 's';
-                pixel.style.width = Math.random() * 10 + 5 + 'px';
-                pixel.style.height = pixel.style.width;
-                canvas.appendChild(pixel);
-            }
-
             // Add hover effect to buttons
-            const buttons = document.querySelectorAll('.web2-button');
+            const buttons = document.querySelectorAll('.button');
             buttons.forEach(button => {
                 button.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px) scale(1.05)';
@@ -624,10 +314,6 @@
                     }, 150);
                 });
             });
-
-            // Console welcome message
-            console.log('%c Welcome to Winston\'s Pixel Blog! 🎮', 'color: #ff3366; font-size: 18px; font-weight: bold;');
-            console.log('%c Web 2.0 meets pixel art gaming!', 'color: #00ccff; font-size: 14px;');
         });
     </script>
 </body>
