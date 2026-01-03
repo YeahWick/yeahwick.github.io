@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Measurement for Software Developers</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Quantum Measurement for Software Developers</h1>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../blog/index.html">Blog</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article>
+            <h2>Understanding Quantum Measurement Without the Math</h2>
+
+            <p>If you're a software developer, you're used to deterministic systems. Given the same input, you expect the same output. Quantum mechanics breaks this expectation in fundamental ways—and understanding <em>why</em> is crucial for anyone working with quantum computing, quantum cryptography, or simply wanting to understand the universe at a deeper level.</p>
+
+            <p>This guide focuses on <strong>quantum measurement</strong>—specifically, how the outcome of measuring a quantum particle depends entirely on the measuring device's configuration.</p>
+
+            <h3>The Classical Intuition (And Why It's Wrong)</h3>
+
+            <p>In classical physics, a particle has definite properties at all times. If a ball is spinning clockwise, it's spinning clockwise whether you look at it or not. Measurement simply <em>reveals</em> pre-existing information.</p>
+
+            <p><strong>Quantum mechanics doesn't work this way.</strong></p>
+
+            <p>A quantum particle doesn't have a definite value for most properties until you measure it. The act of measurement <em>creates</em> the outcome.</p>
+
+            <h3>Quantum States as Vectors</h3>
+
+            <p>In quantum mechanics, we represent the state of a particle as a <strong>state vector</strong>. Think of it like this:</p>
+
+            <pre><code># Classical bit
+classical_bit = 0  # or 1, definitely one or the other
+
+# Quantum bit (qubit) - exists in superposition
+# |ψ⟩ = α|0⟩ + β|1⟩
+qubit_state = {
+    "amplitude_0": alpha,  # α
+    "amplitude_1": beta    # β
+}
+# Constraint: |α|² + |β|² = 1</code></pre>
+
+            <p>The state vector can be written as a linear combination of basis states:</p>
+
+            <p><code>|ψ⟩ = α|0⟩ + β|1⟩</code></p>
+
+            <p>where α and β are complex numbers called <strong>probability amplitudes</strong>, and the constraint |α|² + |β|² = 1 ensures that the total probability is 1 (or 100%).</p>
+
+            <h3>The Measurement Postulate</h3>
+
+            <p>Here's the core insight: <strong>a measurement device defines a basis</strong>, and the measurement outcome depends on how the quantum state projects onto that basis.</p>
+
+            <h3>Device Orientation Determines Outcomes</h3>
+
+            <p>Consider an electron's spin—a quantum property with no classical analog. When measured along any axis, it can only yield two results: "spin up" or "spin down".</p>
+
+            <p>But here's the key: <strong>the axis you choose to measure determines everything</strong>.</p>
+
+            <h3>The 100% Probability Guarantee</h3>
+
+            <p><strong>If a particle is in an eigenstate of your measurement device, you will measure the corresponding eigenvalue with 100% probability.</strong></p>
+
+            <p>This is because the probabilities are calculated based on how well the state matches the measurement basis.</p>
+
+            <h3>Qiskit Examples</h3>
+
+            <p>Let's see how this works in practice with Qiskit, IBM's quantum computing framework.</p>
+
+            <h4>Example 1: Creating and Measuring a Qubit</h4>
+
+            <pre><code>from qiskit import QuantumCircuit, Aer, execute
+from qiskit.visualization import plot_histogram
+
+# Create a quantum circuit with 1 qubit and 1 classical bit
+circuit = QuantumCircuit(1, 1)
+
+# Apply a Hadamard gate to put the qubit in superposition
+circuit.h(0)
+
+# Measure the qubit
+circuit.measure(0, 0)
+
+# Simulate the circuit
+simulator = Aer.get_backend('qasm_simulator')
+result = execute(circuit, simulator, shots=1024).result()
+
+# Get the counts
+counts = result.get_counts(circuit)
+print(counts)
+plot_histogram(counts)</code></pre>
+
+            <p>This code creates a qubit in superposition (α = β = 1/√2, so |α|² = |β|² = 0.5) and measures it. You should see approximately 50% probability for both 0 and 1 outcomes.</p>
+
+            <h4>Example 2: Sequential Measurements</h4>
+
+            <pre><code># Create a circuit with 1 qubit and 2 classical bits
+circuit = QuantumCircuit(1, 2)
+
+# Apply a Hadamard gate to put the qubit in superposition
+circuit.h(0)
+
+# Measure in the Z-basis (standard basis)
+circuit.measure(0, 0)
+
+# Apply another Hadamard gate
+circuit.h(0)
+
+# Measure again
+circuit.measure(0, 1)
+
+# Simulate
+result = execute(circuit, simulator, shots=1024).result()
+
+# Get the counts
+counts = result.get_counts(circuit)
+print(counts)
+plot_histogram(counts)</code></pre>
+
+            <p>This example shows how sequential measurements work. The first measurement collapses the state, and the second measurement will give you different results based on the new state.</p>
+
+            <h3>Why This Matters for Developers</h3>
+
+            <p>This isn't just abstract theory. It's the foundation of:</p>
+
+            <ul>
+                <li><strong>Quantum key distribution (QKD)</strong>: Security relies on the fact that measuring in the "wrong" basis disturbs the state</li>
+                <li><strong>Quantum error correction</strong>: Syndrome measurements must be carefully designed</li>
+                <li><strong>Quantum algorithms</strong>: Gates rotate states to ensure desired measurement outcomes</li>
+            </ul>
+
+            <h3>Summary: Key Takeaways for Developers</h3>
+
+            <p><strong>The Three Laws of Quantum Measurement:</strong></p>
+
+            <ol>
+                <li><strong>The device defines the question</strong>: Your measurement apparatus determines <em>which</em> observable you're measuring (which basis you're projecting onto).</li>
+                <li><strong>Eigenstates give certainty</strong>: If the quantum state is an eigenstate of your measurement operator, you get deterministic results—100% probability for one outcome.</li>
+                <li><strong>Non-eigenstates give probability</strong>: If the state is a superposition in your measurement basis, outcomes are probabilistic, governed by P(i) = |⟨i | ψ⟩|².</li>
+            </ol>
+
+            <p>The measurement problem isn't just philosophy—it's the operational foundation of all quantum technology. Understanding that <strong>the device is part of the physics</strong> is your first step toward thinking quantum-mechanically.</p>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Your Name. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
