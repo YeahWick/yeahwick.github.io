@@ -32,13 +32,23 @@ git checkout -b "$NEW_BRANCH"
 echo "Staging all changes..."
 git add .
 
-# Commit changes
-echo "Committing changes..."
-git commit -m "$COMMIT_MESSAGE
+# Check if there are any changes to commit
+if git diff --cached --exit-code >/dev/null 2>&1; then
+    echo "No changes to commit. Creating empty commit..."
+    git commit --allow-empty -m "$COMMIT_MESSAGE
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
+    Co-Authored-By: Claude <noreply@anthropic.com>"
+else
+    # Commit changes
+    echo "Committing changes..."
+    git commit -m "$COMMIT_MESSAGE
+
+    🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+    Co-Authored-By: Claude <noreply@anthropic.com>"
+fi
 
 # Push to origin
 echo "Pushing to origin..."
