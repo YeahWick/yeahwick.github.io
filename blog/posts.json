@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Quantum Measurement for Software Developers",
+    "date": "January 3, 2026",
+    "views": "0 views",
+    "excerpt": "Understanding quantum measurement is crucial for developers working with quantum computing. This guide explains how the outcome of measuring a quantum particle depends entirely on the measuring device's configuration, without getting into complex math. Learn how quantum states work, why measurement creates outcomes, and see practical examples using Qiskit.",
+    "url": "/blog/quantum-measurement-for-developers.html",
+    "readTime": "12 min read"
+  },
+  {
+    "title": "Introduction to Quantum Computing",
+    "date": "April 5, 2025",
+    "views": "0 views",
+    "excerpt": "Quantum computing represents one of the most exciting frontiers in modern technology. Unlike classical computers that use bits as the smallest unit of information (0 or 1), quantum computers use quantum bits or qubits, which can exist in multiple states simultaneously. This fundamental difference opens up possibilities for solving certain problems exponentially faster than traditional computers...",
+    "url": "/blog/introduction-to-quantum-computing.html",
+    "readTime": "10 min read"
+  },
+  {
+    "title": "Web Development Trends in 2025",
+    "date": "March 8, 2025",
+    "views": "2.4K views",
+    "excerpt": "As we progress further into 2025, the web development landscape continues to evolve at a rapid pace. New technologies, frameworks, and methodologies are emerging that promise to reshape how we build and interact with web applications. In this article, I'll explore the most significant trends shaping the future...",
+    "url": "/blog/web-development-trends-2025.html",
+    "readTime": "6 min read"
+  },
+  {
+    "title": "Creative CSS Techniques",
+    "date": "March 1, 2025",
+    "views": "3.1K views",
+    "excerpt": "CSS has evolved far beyond simple styling rules. Modern CSS offers incredible capabilities for creating stunning visual effects and animations that were previously only possible with heavy JavaScript libraries or even Flash. In this article, I'll share some of my favorite creative CSS techniques...",
+    "url": "/blog/creative-css-techniques.html",
+    "readTime": "7 min read"
+  }
+]

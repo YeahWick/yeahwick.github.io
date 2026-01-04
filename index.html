@@ -237,33 +237,8 @@
                 <h2><i class="fas fa-newspaper"></i> LATEST BLOG POSTS</h2>
             </div>
 
-            <div class="content-grid">
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> April 5, 2025</span>
-                        <span><i class="far fa-eye"></i> 0 views</span>
-                    </div>
-                    <h3><a href="/blog/introduction-to-quantum-computing.html" style="color: #ffcc00; text-decoration: none;">Introduction to Quantum Computing</a></h3>
-                    <p>Discover the fundamentals of quantum computing, from qubits and superposition to quantum algorithms and future applications.</p>
-                </article>
-
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> March 8, 2025</span>
-                        <span><i class="far fa-eye"></i> 2.4K views</span>
-                    </div>
-                    <h3><a href="/blog/web-development-trends-2025.html" style="color: #ffcc00; text-decoration: none;">Web Development Trends in 2025</a></h3>
-                    <p>Exploring the latest trends in web development and how they're shaping the future of the web.</p>
-                </article>
-
-                <article class="card blog-post">
-                    <div class="post-meta">
-                        <span><i class="far fa-calendar"></i> March 1, 2025</span>
-                        <span><i class="far fa-eye"></i> 3.1K views</span>
-                    </div>
-                    <h3><a href="/blog/creative-css-techniques.html" style="color: #ffcc00; text-decoration: none;">Creative CSS Techniques</a></h3>
-                    <p>Learn advanced CSS techniques to create stunning visual effects and modern user interfaces.</p>
-                </article>
+            <div class="content-grid" id="blog-posts-container">
+                <!-- Blog posts will be loaded here dynamically -->
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
@@ -314,7 +289,57 @@
                     }, 150);
                 });
             });
+
+            // Load blog posts dynamically
+            loadBlogPosts();
         });
+
+        async function loadBlogPosts() {
+            try {
+                const response = await fetch('/blog/posts.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load blog posts');
+                }
+                const posts = await response.json();
+
+                const container = document.getElementById('blog-posts-container');
+                container.innerHTML = '';
+
+                // Display only the first 3 posts on the homepage
+                const displayedPosts = posts.slice(0, 3);
+
+                displayedPosts.forEach(post => {
+                    const postElement = document.createElement('article');
+                    postElement.className = 'card blog-post';
+
+                    postElement.innerHTML = `
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar"></i> ${post.date}</span>
+                            <span><i class="far fa-eye"></i> ${post.views}</span>
+                        </div>
+                        <h3><a href="${post.url}" style="color: #ffcc00; text-decoration: none;">${post.title}</a></h3>
+                        <p>${post.excerpt}</p>
+                    `;
+
+                    // Add click effect to the post
+                    postElement.addEventListener('click', function(e) {
+                        // Only trigger if clicking on the post itself, not on links
+                        if (e.target.tagName !== 'A') {
+                            this.style.transform = 'scale(0.98)';
+                            setTimeout(() => {
+                                this.style.transform = '';
+                            }, 150);
+                        }
+                    });
+
+                    container.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Error loading blog posts:', error);
+                const container = document.getElementById('blog-posts-container');
+                container.innerHTML = '<p style="text-align: center; color: #ff3366;">Failed to load blog posts. Please try again later.</p>';
+            }
+        }
     </script>
 </body>
 </html>
