@@ -62,3 +62,22 @@ This repository demonstrates integration with Claude through:
 3. **Automation Workflows** - Scripts that streamline content creation while maintaining attribution
 
 The setup enables developers to leverage Claude for content generation while ensuring proper attribution and streamlined publishing workflows through GitHub.
+
+## Known Issues and Best Practices
+
+### Issue: Script Failure with Non-Standard Branch Names
+
+The `create-blog-pr.sh` script may fail when run from branches with non-standard names (like `refs/catnip/percy`). This occurs because:
+- The script creates a new branch with a timestamped name
+- It then tries to commit changes, but if changes were already committed to the current branch, there are no changes to commit in the new branch
+- The script doesn't handle this scenario gracefully
+
+### Recommended Approach
+
+When working with branches that have non-standard names or when the script fails:
+1. Create a new branch from the main branch: `git checkout -b feature-branch-name main`
+2. Cherry-pick your changes: `git cherry-pick <commit-hash>`
+3. Push the branch to remote: `git push -u origin feature-branch-name`
+4. Create the PR using the `gh` command: `gh pr create --title "PR Title" --body "PR Description"`
+
+This approach ensures that the PR is created from a standard branch name and avoids the issues with the automated script.
