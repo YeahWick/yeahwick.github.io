@@ -307,20 +307,36 @@ qubit_state = {
 from qiskit.visualization import plot_histogram
 
 # Create a quantum circuit with 1 qubit and 1 classical bit
-circuit = QuantumCircuit(1, 1)
+# The QuantumCircuit constructor takes two parameters:
+# - num_qubits: number of qubits in the circuit
+# - num_clbits: number of classical bits to store measurement results
+circuit = QuantumCircuit(num_qubits=1, num_clbits=1)
 
 # Apply a Hadamard gate to put the qubit in superposition
-circuit.h(0)
+# The Hadamard gate creates an equal superposition of |0> and |1>
+# This means the qubit has a 50% chance of being measured as 0 and 50% chance of being measured as 1
+circuit.h(qubit=0)
 
 # Measure the qubit
-circuit.measure(0, 0)
+# The measure operation takes two parameters:
+# - qubit: the qubit to measure (0-indexed)
+# - clbit: the classical bit to store the measurement result (0-indexed)
+circuit.measure(qubit=0, clbit=0)
 
-# Simulate the circuit
+# Simulate the circuit using the QASM simulator
+# The QASM simulator is a local simulator that simulates quantum circuits without noise
 simulator = Aer.get_backend('qasm_simulator')
-result = execute(circuit, simulator, shots=1024).result()
 
-# Get the counts
-counts = result.get_counts(circuit)
+# Execute the circuit on the simulator
+# The execute function takes three parameters:
+# - circuit: the quantum circuit to execute
+# - backend: the quantum backend to run the circuit on
+# - shots: the number of times to run the circuit (more shots = more accurate results)
+result = execute(circuit=circuit, backend=simulator, shots=1024).result()
+
+# Get the measurement results as a dictionary
+# The get_counts method returns a dictionary with measurement outcomes as keys and their frequencies as values
+counts = result.get_counts(circuit=circuit)
 print(counts)
 plot_histogram(counts)</code></pre>
 
@@ -328,26 +344,41 @@ plot_histogram(counts)</code></pre>
 
             <h4>Example 2: Sequential Measurements</h4>
 
-            <pre><code># Create a circuit with 1 qubit and 2 classical bits
-circuit = QuantumCircuit(1, 2)
+            <pre><code># Create a quantum circuit with 1 qubit and 2 classical bits
+# The QuantumCircuit constructor takes two parameters:
+# - num_qubits: number of qubits in the circuit
+# - num_clbits: number of classical bits to store measurement results
+circuit = QuantumCircuit(num_qubits=1, num_clbits=2)
 
 # Apply a Hadamard gate to put the qubit in superposition
-circuit.h(0)
+# The Hadamard gate creates an equal superposition of |0> and |1>
+# This means the qubit has a 50% chance of being measured as 0 and 50% chance of being measured as 1
+circuit.h(qubit=0)
 
 # Measure in the Z-basis (standard basis)
-circuit.measure(0, 0)
+# The measure operation takes two parameters:
+# - qubit: the qubit to measure (0-indexed)
+# - clbit: the classical bit to store the measurement result (0-indexed)
+circuit.measure(qubit=0, clbit=0)
 
 # Apply another Hadamard gate
-circuit.h(0)
+# This gate rotates the state again, which will affect the second measurement outcome
+circuit.h(qubit=0)
 
 # Measure again
-circuit.measure(0, 1)
+# We're measuring the same qubit but storing the result in a different classical bit (index 1)
+circuit.measure(qubit=0, clbit=1)
 
-# Simulate
-result = execute(circuit, simulator, shots=1024).result()
+# Simulate the circuit using the QASM simulator
+# The execute function takes three parameters:
+# - circuit: the quantum circuit to execute
+# - backend: the quantum backend to run the circuit on
+# - shots: the number of times to run the circuit (more shots = more accurate results)
+result = execute(circuit=circuit, backend=simulator, shots=1024).result()
 
-# Get the counts
-counts = result.get_counts(circuit)
+# Get the measurement results as a dictionary
+# The get_counts method returns a dictionary with measurement outcomes as keys and their frequencies as values
+counts = result.get_counts(circuit=circuit)
 print(counts)
 plot_histogram(counts)</code></pre>
 
