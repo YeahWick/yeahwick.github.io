@@ -5,253 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantum Measurement for Software Developers - YeahWick's Blog</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 50%, #2a2a6a 100%);
-            color: #e0e0ff;
-            min-height: 100vh;
-            background-attachment: fixed;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
-                        0 1px 8px rgba(255, 255, 255, 0.1) inset,
-                        0 -1px 8px rgba(0, 0, 0, 0.2) inset;
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-text {
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(90deg, #ff3366, #00ccff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            color: #aaccff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .post-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .post-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #ffcc00;
-        }
-
-        .post-meta {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #aaccff;
-        }
-
-        .post-content {
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        .post-content h2 {
-            color: #ffcc00;
-            margin: 30px 0 15px 0;
-        }
-
-        .post-content p {
-            margin-bottom: 20px;
-        }
-
-        .post-content ul, .post-content ol {
-            margin-left: 30px;
-            margin-bottom: 20px;
-        }
-
-        .post-content li {
-            margin-bottom: 10px;
-        }
-
-        .post-content pre {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            overflow-x: auto;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-        }
-
-        .back-button {
-            display: inline-block;
-            background: linear-gradient(to bottom, #ff3366, #cc0055);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4),
-                        0 1px 3px rgba(255, 255, 255, 0.3) inset;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 51, 102, 0.6),
-                        0 1px 3px rgba(255, 255, 255, 0.5) inset;
-            background: linear-gradient(to bottom, #ff4488, #dd0066);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px;
-            margin-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #8899cc;
-            font-size: 0.9rem;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .social-icons a {
-            color: #aaccff;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: #ff3366;
-            transform: scale(1.2);
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .post-header h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header card">
-            <div class="logo">
-                <div class="logo-text">YEAHWICK'S BLOG</div>
-            </div>
+            <a href="/" class="logo-text">YeahWick's Blog</a>
+            
             <nav class="nav-links">
                 <a href="/"><i class="fas fa-home"></i> Home</a>
                 <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
                 <a href="/"><i class="fas fa-envelope"></i> Contact</a>
             </nav>
         </header>
-
         <!-- Blog Post -->
         <article class="card">
             <div class="post-header">
                 <h1>Quantum Measurement for Software Developers</h1>
                 <div class="post-meta">
-                    <span><i class="far fa-calendar"></i> {{PUBLISH_DATE}}</span>
-                    <span><i class="far fa-clock"></i> {{READ_TIME}} min read</span>
-                    <span><i class="far fa-eye"></i> {{VIEWS}} views</span>
-                </div>
-            </div>
+                    <span>{{PUBLISH_DATE}}</span>
 
+            
             <div class="post-content">
             <h2>Understanding Quantum Measurement Without the Math</h2>
-
             <p>If you're a software developer, you're used to deterministic systems. Given the same input, you expect the same output. Quantum mechanics breaks this expectation in fundamental ways—and understanding <em>why</em> is crucial for anyone working with quantum computing, quantum cryptography, or simply wanting to understand the universe at a deeper level.</p>
-
             <p>This guide focuses on <strong>quantum measurement</strong>—specifically, how the outcome of measuring a quantum particle depends entirely on the measuring device's configuration.</p>
-
             <h3>The Classical Intuition (And Why It's Wrong)</h3>
-
             <p>In classical physics, a particle has definite properties at all times. If a ball is spinning clockwise, it's spinning clockwise whether you look at it or not. Measurement simply <em>reveals</em> pre-existing information.</p>
-
             <p><strong>Quantum mechanics doesn't work this way.</strong></p>
-
             <p>A quantum particle doesn't have a definite value for most properties until you measure it. The act of measurement <em>creates</em> the outcome.</p>
-
             <h3>Quantum States as Vectors</h3>
-
             <p>In quantum mechanics, we represent the state of a particle as a <strong>state vector</strong>. Think of it like this:</p>
-
             <pre><code># Classical bit
 classical_bit = 0  # or 1, definitely one or the other
-
 # Quantum bit (qubit) - exists in superposition
 # |ψ⟩ = α|0⟩ + β|1⟩
 qubit_state = {
@@ -259,21 +46,13 @@ qubit_state = {
     "amplitude_1": beta    # β
 }
 # Constraint: |α|² + |β|² = 1</code></pre>
-
             <p>The state vector can be written as a linear combination of basis states:</p>
-
             <p><code>|ψ⟩ = α|0⟩ + β|1⟩</code></p>
-
             <p>where α and β are complex numbers called <strong>probability amplitudes</strong>, and the constraint |α|² + |β|² = 1 ensures that the total probability is 1 (or 100%).</p>
-
             <h3>The Measurement Postulate</h3>
-
             <p>Here's the core insight: <strong>a measurement device defines a basis</strong>, and the measurement outcome depends on how the quantum state projects onto that basis.</p>
-
             <h3>Photon Polarization: A Better Analogy</h3>
-
             <p>Let's use photon polarization as our primary analogy for quantum measurement. Imagine photons (particles of light) as having a "polarization angle" that can be measured with polarizing filters.</p>
-
             <p><strong>Key concepts:</strong></p>
             <ul>
                 <li>Photons can be polarized at any angle (0°, 45°, 90°, etc.)</li>
@@ -282,7 +61,6 @@ qubit_state = {
                 <li>If the photon's polarization is perpendicular to the filter, it's always blocked (0% probability)</li>
                 <li>If the photon's polarization is at an angle θ to the filter, it passes through with probability cos²(θ)</li>
             </ul>
-
             <p>This is analogous to quantum measurement where:</p>
             <ul>
                 <li>The photon's polarization state is like a quantum state vector</li>
@@ -290,22 +68,14 @@ qubit_state = {
                 <li>The outcome (passes through or blocked) is like measuring a quantum state</li>
                 <li>The probability of passing through depends on the angle between the photon's polarization and the filter's orientation, similar to how quantum measurement probabilities depend on the projection of the state onto the measurement basis</li>
             </ul>
-
             <h3>The 100% Probability Guarantee</h3>
-
             <p><strong>If a particle is in an eigenstate of your measurement device, you will measure the corresponding eigenvalue with 100% probability.</strong></p>
-
             <p>This is because the probabilities are calculated based on how well the state matches the measurement basis.</p>
-
             <h3>Qiskit Examples</h3>
-
             <p>Let's see how this works in practice with Qiskit, IBM's quantum computing framework.</p>
-
             <h4>Example 1: Creating and Measuring a Qubit</h4>
-
             <pre><code>from qiskit import QuantumCircuit, Aer, execute
 from qiskit.visualization import plot_histogram
-
 # Create a quantum circuit with 1 qubit and 1 classical bit
 # The QuantumCircuit constructor takes two parameters:
 # - num_qubits: number of qubits in the circuit
@@ -339,11 +109,8 @@ result = execute(circuit=circuit, backend=simulator, shots=1024).result()
 counts = result.get_counts(circuit=circuit)
 print(counts)
 plot_histogram(counts)</code></pre>
-
             <p>This code creates a qubit in superposition (α = β = 1/√2, so |α|² = |β|² = 0.5) and measures it. You should see approximately 50% probability for both 0 and 1 outcomes.</p>
-
             <h4>Example 2: Sequential Measurements</h4>
-
             <pre><code># Create a quantum circuit with 1 qubit and 2 classical bits
 # The QuantumCircuit constructor takes two parameters:
 # - num_qubits: number of qubits in the circuit
@@ -381,54 +148,40 @@ result = execute(circuit=circuit, backend=simulator, shots=1024).result()
 counts = result.get_counts(circuit=circuit)
 print(counts)
 plot_histogram(counts)</code></pre>
-
             <p>This example shows how sequential measurements work. The first measurement collapses the state, and the second measurement will give you different results based on the new state.</p>
-
             <h3>Why This Matters for Developers</h3>
-
             <p>This isn't just abstract theory. It's the foundation of:</p>
-
             <ul>
                 <li><strong>Quantum key distribution (QKD)</strong>: Security relies on the fact that measuring in the "wrong" basis disturbs the state</li>
                 <li><strong>Quantum error correction</strong>: Syndrome measurements must be carefully designed</li>
                 <li><strong>Quantum algorithms</strong>: Gates rotate states to ensure desired measurement outcomes</li>
             </ul>
-
             <h3>Summary: Key Takeaways for Developers</h3>
-
             <p><strong>The Three Laws of Quantum Measurement:</strong></p>
-
             <ol>
                 <li><strong>The device defines the question</strong>: Your measurement apparatus determines <em>which</em> observable you're measuring (which basis you're projecting onto).</li>
                 <li><strong>Eigenstates give certainty</strong>: If the quantum state is an eigenstate of your measurement operator, you get deterministic results—100% probability for one outcome.</li>
                 <li><strong>Non-eigenstates give probability</strong>: If the state is a superposition in your measurement basis, outcomes are probabilistic, governed by P(i) = |⟨i | ψ⟩|².</li>
             </ol>
-
             <p>The measurement problem isn't just philosophy—it's the operational foundation of all quantum technology. Understanding that <strong>the device is part of the physics</strong> is your first step toward thinking quantum-mechanically.</p>
-            </div>
-
+            
             <div style="text-align: center;">
-                <a href="/blog/" class="back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
-            </div>
+                <a href="/blog/" class="button back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            
         </article>
-
         <!-- Footer -->
-        <footer class="footer card">
-            <div style="margin-bottom: 20px;">
-                <div class="logo-text" style="font-size: 2rem;">YEAHWICK'S BLOG</div>
-                <p style="margin-top: 10px;">Where technology meets creativity</p>
-            </div>
-
+        <footer class="footer">
+                <div class="logo-text">YeahWick's Blog
+                <p>Where technology meets creativity</p>
+            
             <div class="social-icons">
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <p>© 2025 YeahWick's Blog. All rights reserved.</p>
-            </div>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            
+                <p>&copy; 2025 YeahWick's Blog. All rights reserved.</p>
+            
         </footer>
-    </div>
+    
 </body>
 </html>
