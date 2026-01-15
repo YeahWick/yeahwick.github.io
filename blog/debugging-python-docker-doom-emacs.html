@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugging Python in Docker Containers with Doom Emacs - YeahWick's Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header card">
+            <a href="/" class="logo-text">YeahWick's Blog</a>
+
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
+                <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </header>
+        <!-- Blog Post -->
+        <article class="card">
+            <div class="post-header">
+                <h1>Debugging Python in Docker Containers with Doom Emacs</h1>
+                <div class="post-meta">
+                    <span>January 15, 2026</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+            <h2>The Container Debugging Challenge</h2>
+            <p>In my <a href="/blog/doom-emacs-debugging-guide.html">previous post</a>, I covered how to debug Python using DAP in Doom Emacs. But modern development often means your code runs inside Docker containers, not directly on your machine. How do you set breakpoints and step through code when Python is running in an isolated container? The answer is <strong>remote debugging</strong> with debugpy.</p>
+            <p>This guide walks you through setting up a complete Docker debugging workflow that lets you use all the DAP features we covered before—breakpoints, variable inspection, stepping, and the REPL—while your code executes inside a container.</p>
+
+            <h2>The Architecture</h2>
+            <p>Remote debugging works by having the Python process in the container connect back to your debugger (or vice versa). Here's what happens:</p>
+            <ol>
+                <li>Your containerized Python app starts with debugpy listening on a port</li>
+                <li>That port is exposed from the container to your host machine</li>
+                <li>Doom Emacs connects to that port using DAP's "attach" mode</li>
+                <li>You debug as if the code were running locally</li>
+            </ol>
+            <p>Let's set this up step by step.</p>
+
+            <h2>Project Structure</h2>
+            <p>We'll create a simple Flask application to demonstrate the debugging workflow. Here's our project structure:</p>
+            <pre><code>my-docker-app/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   └── utils.py
+├── Dockerfile
+├── docker-compose.yml
+├── docker-compose.debug.yml
+└── requirements.txt</code></pre>
+
+            <h2>The Example Application</h2>
+            <p>First, let's create our Flask application. This simple API calculates statistics for numbers:</p>
+            <pre><code># app/main.py
+from flask import Flask, request, jsonify
+from app.utils import calculate_stats
+
+app = Flask(__name__)
+
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy"})
+
+
+@app.route('/stats', methods=['POST'])
+def stats():
+    data = request.get_json()
+    numbers = data.get('numbers', [])
+
+    if not numbers:
+        return jsonify({"error": "No numbers provided"}), 400
+
+    result = calculate_stats(numbers)
+    return jsonify(result)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)</code></pre>
+
+            <pre><code># app/utils.py
+def calculate_mean(numbers):
+    """Calculate the arithmetic mean."""
+    total = sum(numbers)
+    return total / len(numbers)
+
+
+def calculate_variance(numbers):
+    """Calculate variance from the mean."""
+    mean = calculate_mean(numbers)
+    squared_diffs = [(x - mean) ** 2 for x in numbers]
+    return calculate_mean(squared_diffs)
+
+
+def calculate_stats(numbers):
+    """Calculate comprehensive statistics."""
+    mean = calculate_mean(numbers)
+    variance = calculate_variance(numbers)
+    std_dev = variance ** 0.5
+
+    return {
+        "count": len(numbers),
+        "mean": round(mean, 4),
+        "variance": round(variance, 4),
+        "std_dev": round(std_dev, 4),
+        "min": min(numbers),
+        "max": max(numbers)
+    }</code></pre>
+
+            <pre><code># app/__init__.py
+# Package marker</code></pre>
+
+            <pre><code># requirements.txt
+flask==3.0.0
+debugpy==1.8.0</code></pre>
+
+            <h2>Docker Configuration</h2>
+            <p>Now let's create the Docker configuration. We'll have two compose files: one for production and one for debugging.</p>
+            <pre><code># Dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app/ ./app/
+
+# Default command for production
+CMD ["python", "-m", "app.main"]</code></pre>
+
+            <pre><code># docker-compose.yml (production)
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production</code></pre>
+
+            <p>For debugging, we need a separate compose file that enables debugpy:</p>
+            <pre><code># docker-compose.debug.yml
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+      - "5678:5678"  # debugpy port
+    environment:
+      - FLASK_ENV=development
+      - DEBUGPY_ENABLE=1
+    volumes:
+      - ./app:/app/app:ro  # Mount source for live editing
+    command: >
+      python -m debugpy
+      --listen 0.0.0.0:5678
+      --wait-for-client
+      -m app.main</code></pre>
+
+            <h3>Understanding the Debug Configuration</h3>
+            <p>Let's break down the key parts of <code>docker-compose.debug.yml</code>:</p>
+            <ul>
+                <li><code>ports: "5678:5678"</code> - Exposes the debugpy port so Emacs can connect</li>
+                <li><code>volumes: ./app:/app/app:ro</code> - Mounts your local source code into the container. This is crucial for Emacs to match breakpoints to files</li>
+                <li><code>--listen 0.0.0.0:5678</code> - Makes debugpy listen on all interfaces (required for Docker networking)</li>
+                <li><code>--wait-for-client</code> - Pauses execution until the debugger connects. Remove this if you want the app to start immediately</li>
+            </ul>
+
+            <h2>Configuring DAP in Doom Emacs</h2>
+            <p>Add a debug template for Docker remote debugging in your <code>~/.doom.d/config.el</code>:</p>
+            <pre><code>;; ~/.doom.d/config.el
+
+(after! dap-mode
+  ;; Docker remote debugging template
+  (dap-register-debug-template
+   "Python :: Docker Attach"
+   (list :type "python"
+         :request "attach"
+         :name "Docker Debug"
+         :connect (list :host "localhost" :port 5678)
+         :pathMappings (vector
+                        (list :localRoot "${workspaceFolder}/app"
+                              :remoteRoot "/app/app"))
+         :justMyCode nil))
+
+  ;; Alternative: attach without waiting
+  (dap-register-debug-template
+   "Python :: Docker Attach (Running)"
+   (list :type "python"
+         :request "attach"
+         :name "Docker Debug (Running)"
+         :connect (list :host "localhost" :port 5678)
+         :pathMappings (vector
+                        (list :localRoot "${workspaceFolder}/app"
+                              :remoteRoot "/app/app"))
+         :justMyCode nil)))</code></pre>
+
+            <h3>Path Mappings Explained</h3>
+            <p>The <code>:pathMappings</code> setting is critical. It tells DAP how to translate between:</p>
+            <ul>
+                <li><code>localRoot</code> - Where the source files are on your machine</li>
+                <li><code>remoteRoot</code> - Where the same files exist inside the container</li>
+            </ul>
+            <p>Without correct path mappings, breakpoints won't work because DAP can't match your local file <code>/home/you/project/app/main.py</code> to the container's <code>/app/app/main.py</code>.</p>
+
+            <h2>The Debugging Workflow</h2>
+            <p>Now let's put it all together. Here's the complete workflow for debugging your containerized Python application:</p>
+
+            <h3>Step 1: Start the Container in Debug Mode</h3>
+            <pre><code># Terminal
+docker-compose -f docker-compose.debug.yml up --build</code></pre>
+            <p>You'll see output like:</p>
+            <pre><code>api-1  | Listening for debugpy on 0.0.0.0:5678...</code></pre>
+            <p>The container is now waiting for your debugger to connect.</p>
+
+            <h3>Step 2: Open Your Project in Emacs</h3>
+            <p>Open the project directory in Emacs. Make sure you're at the project root so that path mappings work correctly.</p>
+
+            <h3>Step 3: Set Breakpoints</h3>
+            <p>Open <code>app/utils.py</code> and set a breakpoint in <code>calculate_stats</code>:</p>
+            <pre><code>SPC d b b    ; On the line: mean = calculate_mean(numbers)</code></pre>
+            <p>The red dot appears in your local file, but it will trigger when the code runs in Docker.</p>
+
+            <h3>Step 4: Attach the Debugger</h3>
+            <pre><code>SPC d d      ; Start debugging
+; Select "Python :: Docker Attach" from the list</code></pre>
+            <p>You'll see DAP connect, and the container will continue execution:</p>
+            <pre><code>api-1  | * Running on http://0.0.0.0:5000</code></pre>
+
+            <h3>Step 5: Trigger Your Code</h3>
+            <p>In another terminal, make a request to your API:</p>
+            <pre><code>curl -X POST http://localhost:5000/stats \
+  -H "Content-Type: application/json" \
+  -d '{"numbers": [10, 20, 30, 40, 50]}'</code></pre>
+            <p>Execution pauses at your breakpoint! You're now debugging code running inside Docker.</p>
+
+            <h3>Step 6: Debug as Normal</h3>
+            <p>All the DAP features work exactly as they do locally:</p>
+            <pre><code>SPC d n      ; Step over
+SPC d i      ; Step into calculate_mean
+SPC d e e    ; Evaluate expression at point
+SPC d e r    ; Open REPL to inspect variables</code></pre>
+            <p>The Locals window shows variables from inside the container, and you can evaluate any Python expression in the container's context.</p>
+
+            <h2>Alternative: Programmatic Debug Activation</h2>
+            <p>Sometimes you want the app to run normally and only start debugging under certain conditions. Instead of using <code>--wait-for-client</code>, you can activate debugging programmatically:</p>
+            <pre><code># app/main.py
+import os
+from flask import Flask, request, jsonify
+from app.utils import calculate_stats
+
+app = Flask(__name__)
+
+# Enable debugging if environment variable is set
+if os.environ.get('DEBUGPY_ENABLE'):
+    import debugpy
+    debugpy.listen(("0.0.0.0", 5678))
+    print("Debugpy listening on port 5678")
+
+    # Optionally wait for client
+    if os.environ.get('DEBUGPY_WAIT'):
+        print("Waiting for debugger to attach...")
+        debugpy.wait_for_client()
+
+
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy"})
+
+
+@app.route('/stats', methods=['POST'])
+def stats():
+    data = request.get_json()
+    numbers = data.get('numbers', [])
+
+    if not numbers:
+        return jsonify({"error": "No numbers provided"}), 400
+
+    # You can also trigger a breakpoint programmatically
+    # debugpy.breakpoint()
+
+    result = calculate_stats(numbers)
+    return jsonify(result)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=False)</code></pre>
+
+            <p>Update your debug compose file:</p>
+            <pre><code># docker-compose.debug.yml (programmatic version)
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+      - "5678:5678"
+    environment:
+      - FLASK_ENV=development
+      - DEBUGPY_ENABLE=1
+      # - DEBUGPY_WAIT=1  # Uncomment to wait for debugger
+    volumes:
+      - ./app:/app/app:ro</code></pre>
+
+            <p>This approach lets you:</p>
+            <ul>
+                <li>Start the app without waiting for a debugger</li>
+                <li>Attach the debugger whenever you need it</li>
+                <li>Use <code>debugpy.breakpoint()</code> to set breakpoints in code</li>
+                <li>Control debugging behavior with environment variables</li>
+            </ul>
+
+            <h2>Debugging Django Applications</h2>
+            <p>For Django, the setup is similar. Here's a Django-specific configuration:</p>
+            <pre><code># manage.py (add at the top)
+import os
+import sys
+
+if os.environ.get('DEBUGPY_ENABLE'):
+    import debugpy
+    debugpy.listen(("0.0.0.0", 5678))
+    if os.environ.get('DEBUGPY_WAIT'):
+        debugpy.wait_for_client()
+
+
+def main():
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+    # ... rest of manage.py</code></pre>
+
+            <pre><code># docker-compose.debug.yml for Django
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    environment:
+      - DEBUGPY_ENABLE=1
+    volumes:
+      - ./myproject:/app/myproject:ro
+    command: python manage.py runserver 0.0.0.0:8000</code></pre>
+
+            <h2>Debugging Background Workers (Celery)</h2>
+            <p>Debugging Celery workers requires attaching to a different process. Use a separate debug port:</p>
+            <pre><code># docker-compose.debug.yml with Celery
+services:
+  api:
+    # ... api config with port 5678
+
+  worker:
+    build: .
+    ports:
+      - "5679:5679"  # Different port for worker
+    environment:
+      - DEBUGPY_ENABLE=1
+      - DEBUGPY_PORT=5679
+    volumes:
+      - ./app:/app/app:ro
+    command: >
+      python -m debugpy
+      --listen 0.0.0.0:5679
+      -m celery
+      -A app.celery worker --loglevel=info</code></pre>
+
+            <p>Add a corresponding DAP template:</p>
+            <pre><code>(dap-register-debug-template
+ "Python :: Docker Worker"
+ (list :type "python"
+       :request "attach"
+       :name "Docker Worker Debug"
+       :connect (list :host "localhost" :port 5679)
+       :pathMappings (vector
+                      (list :localRoot "${workspaceFolder}/app"
+                            :remoteRoot "/app/app"))
+       :justMyCode nil))</code></pre>
+
+            <h2>Debugging Tests in Docker</h2>
+            <p>Running and debugging tests inside Docker follows the same pattern:</p>
+            <pre><code># docker-compose.test.yml
+services:
+  test:
+    build: .
+    ports:
+      - "5678:5678"
+    environment:
+      - DEBUGPY_ENABLE=1
+    volumes:
+      - ./app:/app/app:ro
+      - ./tests:/app/tests:ro
+    command: >
+      python -m debugpy
+      --listen 0.0.0.0:5678
+      --wait-for-client
+      -m pytest tests/ -v -s</code></pre>
+
+            <p>Run tests with debugging:</p>
+            <pre><code>docker-compose -f docker-compose.test.yml up</code></pre>
+            <p>Then attach with <code>SPC d d</code> and select your Docker attach template.</p>
+
+            <h2>Troubleshooting</h2>
+
+            <h3>Breakpoints Not Hitting</h3>
+            <p>The most common issue is incorrect path mappings. Verify them:</p>
+            <ol>
+                <li>Check where your code lives locally: <code>/home/user/project/app/main.py</code></li>
+                <li>Check where it's mounted in the container: <code>/app/app/main.py</code></li>
+                <li>Ensure <code>:localRoot</code> and <code>:remoteRoot</code> match these paths</li>
+            </ol>
+            <p>You can also verify by adding a log point instead of a breakpoint—if the log appears in the output, your path mappings are correct.</p>
+
+            <h3>Connection Refused</h3>
+            <p>If DAP can't connect:</p>
+            <ul>
+                <li>Ensure the container is running: <code>docker ps</code></li>
+                <li>Check the port is exposed: <code>docker port container_name</code></li>
+                <li>Verify debugpy is listening: <code>docker logs container_name</code></li>
+                <li>Try connecting with netcat: <code>nc -zv localhost 5678</code></li>
+            </ul>
+
+            <h3>Debugger Disconnects</h3>
+            <p>If the debugger disconnects unexpectedly:</p>
+            <ul>
+                <li>Check for container restarts: <code>docker-compose logs -f</code></li>
+                <li>Ensure your code doesn't call <code>sys.exit()</code></li>
+                <li>For long-running tasks, the connection might timeout—reconnect as needed</li>
+            </ul>
+
+            <h3>Source Not Matching</h3>
+            <p>If line numbers seem off:</p>
+            <ul>
+                <li>Ensure volumes are mounted with the latest code</li>
+                <li>Rebuild the container after code changes: <code>docker-compose build</code></li>
+                <li>For development, use volume mounts instead of copying files in the Dockerfile</li>
+            </ul>
+
+            <h2>Best Practices</h2>
+            <ul>
+                <li><strong>Use separate compose files</strong>: Keep debug configuration separate from production</li>
+                <li><strong>Don't commit debug code</strong>: Use environment variables to conditionally enable debugpy</li>
+                <li><strong>Mount source as read-only</strong>: Use <code>:ro</code> to prevent accidental container writes</li>
+                <li><strong>Use .dockerignore</strong>: Exclude <code>__pycache__</code>, <code>.pyc</code>, and IDE files</li>
+                <li><strong>Document the workflow</strong>: Add debugging instructions to your project README</li>
+                <li><strong>Use consistent ports</strong>: Stick to 5678 for debugpy to maintain team consistency</li>
+            </ul>
+
+            <h2>Quick Reference: Docker Debugging Commands</h2>
+            <pre><code># Start container in debug mode
+docker-compose -f docker-compose.debug.yml up --build
+
+# Start without waiting for debugger
+docker-compose -f docker-compose.debug.yml up -d
+
+# View container logs
+docker-compose -f docker-compose.debug.yml logs -f
+
+# Rebuild after Dockerfile changes
+docker-compose -f docker-compose.debug.yml up --build
+
+# Stop containers
+docker-compose -f docker-compose.debug.yml down</code></pre>
+
+            <h2>Emacs DAP Quick Reference for Docker</h2>
+            <pre><code>SPC d d        ; Start debugging, select Docker template
+SPC d b b      ; Set breakpoint (works for container code!)
+SPC d n        ; Step over
+SPC d i        ; Step into
+SPC d o        ; Step out
+SPC d c        ; Continue
+SPC d q        ; Disconnect from container
+SPC d e r      ; REPL (evaluates in container context)</code></pre>
+
+            <h2>Conclusion</h2>
+            <p>Debugging containerized Python applications doesn't have to mean abandoning your carefully crafted Emacs workflow. With debugpy and DAP's remote debugging capabilities, you get the full debugging experience—breakpoints, stepping, variable inspection, and the REPL—while your code runs in a proper container environment.</p>
+            <p>The key is getting your path mappings right and using a separate compose file for debug mode. Once set up, the workflow becomes second nature: start the container, attach the debugger, and debug as if everything were running locally.</p>
+            <p>This approach works for Flask, Django, Celery workers, and even test suites. No more print statements scattered through containerized code—just set a breakpoint and step through.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/blog/" class="button back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            </div>
+        </article>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="logo-text">YeahWick's Blog</div>
+            <p>Where technology meets creativity</p>
+
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+
+            <p>&copy; 2025 YeahWick's Blog. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
