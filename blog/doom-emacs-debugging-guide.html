@@ -41,10 +41,29 @@ lsp               ; M-x vscode
 
 :lang
 (python +lsp +pyright)  ; pyright provides excellent type checking</code></pre>
+
+            <h3>Virtual Environment Management with +pyenv or +uv</h3>
+            <p>If you're using virtual environments (and you should be), add one of these flags to your Python module for automatic environment detection:</p>
+            <pre><code>;; Option 1: Using pyenv for version and virtualenv management
+(python +lsp +pyright +pyenv)
+
+;; Option 2: Using uv (faster, modern Python package manager)
+(python +lsp +pyright +uv)</code></pre>
+            <p>The <code>+pyenv</code> flag integrates with pyenv and pyenv-virtualenv, automatically detecting and activating the correct Python version and virtual environment based on your project's <code>.python-version</code> file.</p>
+            <p>The <code>+uv</code> flag integrates with <a href="https://github.com/astral-sh/uv">uv</a>, Astral's blazing-fast Python package installer and resolver. It will detect <code>.venv</code> directories and <code>uv.lock</code> files in your project.</p>
+            <p>These flags are crucial for debugging because DAP needs to find <code>debugpy</code> in your project's virtual environment, not your global Python installation.</p>
+
             <p>After editing, run <code>doom sync</code> to install the required packages:</p>
             <pre><code>doom sync</code></pre>
-            <p>You'll also need to install <code>debugpy</code>, the Python debugger that DAP uses:</p>
-            <pre><code>pip install debugpy</code></pre>
+            <p>You'll also need to install <code>debugpy</code> in your project's virtual environment:</p>
+            <pre><code># If using pip/venv
+pip install debugpy
+
+# If using uv
+uv add --dev debugpy
+
+# If using pyenv with pip
+pyenv activate myproject && pip install debugpy</code></pre>
 
             <h2>Our Example Python Program</h2>
             <p>Let's create a simple Python program that we'll use to demonstrate debugging features. This program calculates statistics for a list of numbers:</p>
@@ -329,6 +348,34 @@ SPC d w o  ; Output window</code></pre>
                 <li><strong>DAP not loading</strong>: Ensure <code>debugger</code> is enabled in <code>init.el</code> and run <code>doom sync</code></li>
                 <li><strong>No debug templates</strong>: Run <code>M-x dap-debug-edit-template</code> to see available templates</li>
             </ul>
+
+            <h3>DAP Prompts for "Adapter" When Starting Debug Session</h3>
+            <p>If running <code>SPC d d</code> prompts you to select an "adapter" instead of showing Python debug templates, this means Emacs cannot find <code>debugpy</code> in your current Python environment. This is one of the most common issues when setting up debugging.</p>
+            <p><strong>The fix:</strong> Ensure <code>debugpy</code> is installed in the virtual environment that Emacs is using:</p>
+            <ol>
+                <li><strong>Check which Python Emacs is using:</strong> Run <code>M-x python-shell-interpreter</code> or check the modeline for the active environment</li>
+                <li><strong>Verify debugpy is installed there:</strong>
+                    <pre><code># Activate your project's venv and check
+which python
+python -c "import debugpy; print(debugpy.__file__)"</code></pre>
+                </li>
+                <li><strong>If missing, install it:</strong>
+                    <pre><code># In your project directory with venv activated
+pip install debugpy</code></pre>
+                </li>
+                <li><strong>Ensure Doom detects your venv:</strong> If you're using <code>+pyenv</code> or <code>+uv</code>, make sure your project has the appropriate config files:
+                    <ul>
+                        <li>For <code>+pyenv</code>: Create a <code>.python-version</code> file in your project root</li>
+                        <li>For <code>+uv</code>: Ensure you have a <code>.venv</code> directory or <code>uv.lock</code> file</li>
+                        <li>Generic: Create a <code>.dir-locals.el</code> with your Python path (see below)</li>
+                    </ul>
+                </li>
+            </ol>
+            <p>If automatic detection isn't working, you can manually set the Python interpreter per-project with a <code>.dir-locals.el</code> file in your project root:</p>
+            <pre><code>;; .dir-locals.el
+((python-mode . ((python-shell-interpreter . "/path/to/your/project/.venv/bin/python")
+                 (python-shell-virtualenv-root . "/path/to/your/project/.venv"))))</code></pre>
+            <p>After creating or modifying <code>.dir-locals.el</code>, reload the buffer with <code>M-x revert-buffer</code> or close and reopen the file.</p>
 
             <h2>Conclusion</h2>
             <p>Debugging in Doom Emacs with DAP brings IDE-level debugging capabilities to your favorite text editor. With breakpoints, variable inspection, and the REPL, you can track down bugs without leaving Emacs. The integration with LSP means you get the best of both worlds: intelligent code navigation and powerful debugging in one environment.</p>
