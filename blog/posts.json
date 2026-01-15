@@ -1,5 +1,13 @@
 [
   {
+    "title": "The CNOT Gate: Building Quantum Twins with Bell States",
+    "date": "January 15, 2026",
+    "views": "0 views",
+    "excerpt": "Explore the CNOT gate—the workhorse of quantum circuits—and discover how combining it with superposition creates Bell states, the simplest examples of quantum entanglement. Through relatable analogies like copycat friends, dancing partners, and magical correlated coins, learn why Einstein called entanglement \"spooky action at a distance\" and see it in action with Qiskit code examples.",
+    "url": "/blog/quantum-cnot-gate-and-bell-states.html",
+    "readTime": "10 min read"
+  },
+  {
     "title": "Quantum Measurement for Software Developers",
     "date": "January 3, 2026",
     "views": "0 views",
