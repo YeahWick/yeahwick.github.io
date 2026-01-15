@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugging Python in Doom Emacs with LSP and DAP - YeahWick's Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header card">
+            <a href="/" class="logo-text">YeahWick's Blog</a>
+
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
+                <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </header>
+        <!-- Blog Post -->
+        <article class="card">
+            <div class="post-header">
+                <h1>Debugging Python in Doom Emacs with LSP and DAP</h1>
+                <div class="post-meta">
+                    <span>January 15, 2026</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+            <h2>Why Debug in Emacs?</h2>
+            <p>If you're already living in Doom Emacs for coding, switching to a different IDE just for debugging feels like a betrayal. The good news is that Doom Emacs has excellent debugging support through the <strong>Debug Adapter Protocol (DAP)</strong>, which works seamlessly with LSP. This guide walks you through setting up and using the debugger for Python, complete with breakpoints, variable inspection, and stepping through code.</p>
+
+            <h2>Prerequisites: Setting Up Your Doom Config</h2>
+            <p>First, ensure you have the right modules enabled in your <code>~/.doom.d/init.el</code>:</p>
+            <pre><code>;; ~/.doom.d/init.el
+:tools
+debugger          ; FIXME stepping through code, to help you add bugs
+lsp               ; M-x vscode
+
+:lang
+(python +lsp +pyright)  ; pyright provides excellent type checking</code></pre>
+            <p>After editing, run <code>doom sync</code> to install the required packages:</p>
+            <pre><code>doom sync</code></pre>
+            <p>You'll also need to install <code>debugpy</code>, the Python debugger that DAP uses:</p>
+            <pre><code>pip install debugpy</code></pre>
+
+            <h2>Our Example Python Program</h2>
+            <p>Let's create a simple Python program that we'll use to demonstrate debugging features. This program calculates statistics for a list of numbers:</p>
+            <pre><code># stats.py - A simple statistics calculator
+
+def calculate_mean(numbers):
+    """Calculate the arithmetic mean of a list of numbers."""
+    total = 0
+    for num in numbers:
+        total += num
+    return total / len(numbers)
+
+
+def calculate_variance(numbers):
+    """Calculate the variance of a list of numbers."""
+    mean = calculate_mean(numbers)
+    squared_diffs = []
+    for num in numbers:
+        diff = num - mean
+        squared_diffs.append(diff ** 2)
+    return calculate_mean(squared_diffs)
+
+
+def find_outliers(numbers, threshold=2):
+    """Find numbers that are more than threshold std devs from mean."""
+    mean = calculate_mean(numbers)
+    variance = calculate_variance(numbers)
+    std_dev = variance ** 0.5
+
+    outliers = []
+    for num in numbers:
+        z_score = abs(num - mean) / std_dev
+        if z_score > threshold:
+            outliers.append(num)
+    return outliers
+
+
+def main():
+    data = [10, 12, 23, 23, 16, 23, 21, 16, 100, 18, 21]
+
+    print(f"Data: {data}")
+    print(f"Mean: {calculate_mean(data):.2f}")
+    print(f"Variance: {calculate_variance(data):.2f}")
+
+    outliers = find_outliers(data)
+    print(f"Outliers: {outliers}")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+
+            <h2>Starting the Debugger</h2>
+            <p>With your Python file open, start the debugger with:</p>
+            <pre><code>SPC d d    ; Start debugging session (doom keybind)
+M-x dap-debug   ; Alternative command</code></pre>
+            <p>You'll be prompted to select a debug template. For Python, choose <strong>"Python :: Run file (buffer)"</strong> to debug the current file.</p>
+            <p>The first time you run this, DAP will download the debug adapter if needed. You'll see the debugger UI appear with several new windows:</p>
+            <ul>
+                <li><strong>Breakpoints</strong>: Shows all set breakpoints</li>
+                <li><strong>Locals</strong>: Displays local variables in the current scope</li>
+                <li><strong>Stack</strong>: Shows the call stack</li>
+                <li><strong>Output</strong>: Program output and debugger messages</li>
+            </ul>
+
+            <h2>Setting Breakpoints</h2>
+            <p>Breakpoints pause execution at specific lines so you can inspect the program state. There are several ways to set them:</p>
+
+            <h3>Toggle Breakpoint at Current Line</h3>
+            <pre><code>SPC d b b  ; Toggle breakpoint at current line
+M-x dap-breakpoint-toggle</code></pre>
+            <p>A red dot will appear in the fringe next to the line number, indicating an active breakpoint.</p>
+
+            <h3>Conditional Breakpoints</h3>
+            <p>Sometimes you only want to break when a specific condition is met. For example, let's say we want to pause only when <code>num</code> equals 100 in our outlier detection:</p>
+            <pre><code>SPC d b c  ; Add conditional breakpoint
+M-x dap-breakpoint-condition</code></pre>
+            <p>When prompted, enter the condition:</p>
+            <pre><code>num == 100</code></pre>
+            <p>Now execution will only pause at that line when the condition is true.</p>
+
+            <h3>Log Points (Non-Breaking)</h3>
+            <p>Log points print a message without stopping execution—perfect for printf-style debugging without modifying code:</p>
+            <pre><code>SPC d b l  ; Add log point
+M-x dap-breakpoint-log-message</code></pre>
+            <p>Enter a log message with expressions in curly braces:</p>
+            <pre><code>Processing number: {num}, current mean: {mean}</code></pre>
+
+            <h3>Managing Breakpoints</h3>
+            <pre><code>SPC d b d  ; Delete breakpoint at point
+SPC d b D  ; Delete all breakpoints
+SPC d b a  ; Add breakpoint (interactive)</code></pre>
+
+            <h2>Stepping Through Code</h2>
+            <p>Once paused at a breakpoint, you can step through your code line by line:</p>
+            <pre><code>SPC d n    ; Step over (next line, don't enter functions)
+SPC d i    ; Step into (enter function calls)
+SPC d o    ; Step out (finish current function, return to caller)
+SPC d c    ; Continue (run until next breakpoint)
+SPC d r    ; Restart debugging session
+SPC d q    ; Quit debugging session</code></pre>
+
+            <h3>Example: Stepping Through calculate_mean</h3>
+            <p>Let's set a breakpoint at line 5 (inside <code>calculate_mean</code>) and step through:</p>
+            <ol>
+                <li>Open <code>stats.py</code> and navigate to line 5: <code>total = 0</code></li>
+                <li>Press <code>SPC d b b</code> to set a breakpoint</li>
+                <li>Press <code>SPC d d</code> and select "Python :: Run file (buffer)"</li>
+                <li>Execution pauses at line 5</li>
+            </ol>
+            <p>Now step through the loop:</p>
+            <pre><code>SPC d n    ; Execute "total = 0", move to line 6
+SPC d n    ; Enter the for loop, move to line 7
+SPC d n    ; Execute "total += num", move back to line 6</code></pre>
+            <p>Watch the <strong>Locals</strong> window update as <code>total</code> accumulates values!</p>
+
+            <h2>Variable Inspection</h2>
+            <p>Inspecting variables is one of the most powerful debugging features. Doom Emacs with DAP provides several ways to examine your program's state.</p>
+
+            <h3>The Locals Window</h3>
+            <p>When paused, the Locals window automatically shows all variables in the current scope:</p>
+            <pre><code>; Example Locals window content when paused in calculate_mean:
+;
+; numbers: [10, 12, 23, 23, 16, 23, 21, 16, 100, 18, 21]
+; total: 166  (after several iterations)
+; num: 23</code></pre>
+            <p>You can expand complex objects by pressing <code>RET</code> on them.</p>
+
+            <h3>Hover Inspection</h3>
+            <p>Move your cursor over any variable and press:</p>
+            <pre><code>SPC d e e  ; Evaluate expression at point
+M-x dap-eval-thing-at-point</code></pre>
+            <p>A popup will show the current value. For our example, hovering over <code>numbers</code> would show:</p>
+            <pre><code>[10, 12, 23, 23, 16, 23, 21, 16, 100, 18, 21]</code></pre>
+
+            <h3>Evaluate Arbitrary Expressions</h3>
+            <p>Want to check a computed value or test an expression? Use the REPL:</p>
+            <pre><code>SPC d e r  ; Open REPL
+M-x dap-ui-repl</code></pre>
+            <p>In the REPL, you can evaluate any Python expression in the current context:</p>
+            <pre><code>>>> total / len(numbers)
+27.545454545454547
+
+>>> numbers[0:3]
+[10, 12, 23]
+
+>>> [n for n in numbers if n > 50]
+[100]</code></pre>
+            <p>This is incredibly powerful for testing hypotheses about your code's behavior.</p>
+
+            <h3>Watch Expressions</h3>
+            <p>Add expressions to watch continuously as you step through code:</p>
+            <pre><code>SPC d e a  ; Add watch expression
+M-x dap-ui-expressions-add</code></pre>
+            <p>Enter an expression like <code>total / len(numbers)</code>. The Expressions window will update this value every time execution pauses.</p>
+
+            <h2>Practical Debugging Session: Finding a Bug</h2>
+            <p>Let's walk through a realistic debugging scenario. Imagine our <code>find_outliers</code> function has a bug—it's returning an empty list when it shouldn't.</p>
+
+            <h3>Step 1: Set Strategic Breakpoints</h3>
+            <p>Set a breakpoint at the start of <code>find_outliers</code> (line 21):</p>
+            <pre><code>SPC d b b  ; on line: mean = calculate_mean(numbers)</code></pre>
+
+            <h3>Step 2: Run the Debugger</h3>
+            <pre><code>SPC d d    ; Start debugging</code></pre>
+
+            <h3>Step 3: Inspect Initial Values</h3>
+            <p>When paused, check the Locals window to see the input:</p>
+            <pre><code>; Locals:
+; numbers: [10, 12, 23, 23, 16, 23, 21, 16, 100, 18, 21]
+; threshold: 2</code></pre>
+
+            <h3>Step 4: Step Through and Watch Variables</h3>
+            <pre><code>SPC d n    ; Step to calculate variance
+SPC d n    ; Step to calculate std_dev</code></pre>
+            <p>Check the computed values:</p>
+            <pre><code>; Locals:
+; mean: 25.727272727272727
+; variance: 548.5619834710744
+; std_dev: 23.421398837498356</code></pre>
+
+            <h3>Step 5: Evaluate a Suspicious Expression</h3>
+            <p>Use the REPL to check if our outlier detection logic is correct:</p>
+            <pre><code>SPC d e r  ; Open REPL
+
+>>> abs(100 - mean) / std_dev
+3.1700...  ; This is > 2, so 100 should be an outlier!
+
+>>> abs(10 - mean) / std_dev
+0.671...   ; This is < 2, not an outlier</code></pre>
+
+            <h3>Step 6: Step Into the Loop</h3>
+            <p>Continue stepping through the loop to verify each number is checked correctly. Set a conditional breakpoint to stop only when processing the outlier:</p>
+            <pre><code>SPC d b c  ; On line: z_score = abs(num - mean) / std_dev
+; Condition: num == 100</code></pre>
+            <p>Now press <code>SPC d c</code> to continue. Execution will pause only when <code>num</code> is 100, letting you verify the outlier detection logic.</p>
+
+            <h2>Useful DAP Commands Reference</h2>
+            <p>Here's a quick reference for the most commonly used debugging commands in Doom Emacs:</p>
+
+            <h3>Session Control</h3>
+            <pre><code>SPC d d    ; Start debugging
+SPC d l    ; Debug last configuration
+SPC d r    ; Restart session
+SPC d q    ; Quit debugging
+SPC d Q    ; Disconnect (leave program running)</code></pre>
+
+            <h3>Stepping</h3>
+            <pre><code>SPC d n    ; Step over (next)
+SPC d i    ; Step into
+SPC d o    ; Step out
+SPC d c    ; Continue
+SPC d s    ; Pause/stop</code></pre>
+
+            <h3>Breakpoints</h3>
+            <pre><code>SPC d b b  ; Toggle breakpoint
+SPC d b c  ; Conditional breakpoint
+SPC d b l  ; Log point
+SPC d b d  ; Delete breakpoint
+SPC d b D  ; Delete all breakpoints</code></pre>
+
+            <h3>Evaluation</h3>
+            <pre><code>SPC d e e  ; Eval at point
+SPC d e r  ; REPL
+SPC d e a  ; Add watch expression</code></pre>
+
+            <h3>UI Windows</h3>
+            <pre><code>SPC d w l  ; Locals window
+SPC d w s  ; Stack frames window
+SPC d w b  ; Breakpoints window
+SPC d w o  ; Output window</code></pre>
+
+            <h2>Configuring Debug Templates</h2>
+            <p>For more complex projects, you may want custom debug configurations. Add them to <code>~/.doom.d/config.el</code>:</p>
+            <pre><code>;; ~/.doom.d/config.el
+
+(after! dap-mode
+  ;; Configure Python debugging
+  (dap-register-debug-template
+   "Python :: My Project"
+   (list :type "python"
+         :args ""
+         :cwd "${workspaceFolder}"
+         :env '(("DEBUG" . "1"))
+         :program "${file}"
+         :request "launch"
+         :name "My Project Debug"))
+
+  ;; Debug with arguments
+  (dap-register-debug-template
+   "Python :: With Args"
+   (list :type "python"
+         :args "--verbose --config config.yaml"
+         :cwd "${workspaceFolder}"
+         :program "${file}"
+         :request "launch"
+         :name "Python with Args"))
+
+  ;; Debug a specific module
+  (dap-register-debug-template
+   "Python :: Module"
+   (list :type "python"
+         :args ""
+         :cwd "${workspaceFolder}"
+         :module "mypackage.main"
+         :request "launch"
+         :name "Debug Module")))</code></pre>
+
+            <h2>Tips and Tricks</h2>
+            <ul>
+                <li><strong>Remote Debugging</strong>: DAP supports attaching to remote Python processes. Use <code>debugpy.listen(("0.0.0.0", 5678))</code> in your code and create an attach configuration.</li>
+                <li><strong>Exception Breakpoints</strong>: Break on all exceptions with <code>SPC d b e</code> to catch errors before they propagate.</li>
+                <li><strong>Hydra Menu</strong>: Press <code>SPC d h</code> to open a hydra menu with all debug commands—great for learning the keybindings.</li>
+                <li><strong>Persistent Breakpoints</strong>: Breakpoints are saved per project, so they persist across sessions.</li>
+                <li><strong>Multi-threaded Debugging</strong>: DAP handles multiple threads. Use the Stack window to switch between threads.</li>
+            </ul>
+
+            <h2>Troubleshooting</h2>
+            <p>If debugging isn't working, check these common issues:</p>
+            <ul>
+                <li><strong>debugpy not found</strong>: Run <code>pip install debugpy</code> in your Python environment</li>
+                <li><strong>Wrong Python interpreter</strong>: Set <code>python-shell-interpreter</code> or use <code>SPC m e i</code> to set the interpreter</li>
+                <li><strong>DAP not loading</strong>: Ensure <code>debugger</code> is enabled in <code>init.el</code> and run <code>doom sync</code></li>
+                <li><strong>No debug templates</strong>: Run <code>M-x dap-debug-edit-template</code> to see available templates</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            <p>Debugging in Doom Emacs with DAP brings IDE-level debugging capabilities to your favorite text editor. With breakpoints, variable inspection, and the REPL, you can track down bugs without leaving Emacs. The integration with LSP means you get the best of both worlds: intelligent code navigation and powerful debugging in one environment.</p>
+            <p>The key is practice—set some breakpoints in your next debugging session instead of reaching for print statements. You'll find that stepping through code and inspecting variables gives you a much deeper understanding of what's actually happening in your program.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/blog/" class="button back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            </div>
+        </article>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="logo-text">YeahWick's Blog</div>
+            <p>Where technology meets creativity</p>
+
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+
+            <p>&copy; 2025 YeahWick's Blog. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
