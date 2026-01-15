@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The CNOT Gate: Building Quantum Twins with Bell States - YeahWick's Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header card">
+            <a href="/" class="logo-text">YeahWick's Blog</a>
+
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
+                <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </header>
+        <!-- Blog Post -->
+        <article class="card">
+            <div class="post-header">
+                <h1>The CNOT Gate: Building Quantum Twins with Bell States</h1>
+                <div class="post-meta">
+                    <span>January 15, 2026</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+            <h2>When One Qubit Controls Another</h2>
+            <p>Imagine two light switches on opposite walls of a room. Normally, they work independently—flip one, and the other stays put. But what if we wired them so that flipping the first switch <em>automatically</em> toggles the second? That's essentially what a <strong>CNOT gate</strong> does in quantum computing, and it's the secret ingredient for creating one of the most mysterious phenomena in physics: <strong>quantum entanglement</strong>.</p>
+            <p>In this guide, we'll explore the CNOT (Controlled-NOT) gate—the workhorse of quantum circuits—and see how combining it with superposition creates <strong>Bell states</strong>, the simplest and most famous examples of entangled particles.</p>
+
+            <h2>The Classical Analogy: The Copycat Friend</h2>
+            <p>Before diving into quantum mechanics, let's build intuition with a relatable scenario.</p>
+            <p>Imagine you have a friend who's an <em>extreme</em> copycat. Here are the rules:</p>
+            <ul>
+                <li>If you raise your hand, your friend <strong>changes</strong> what they're doing (hand up becomes hand down, or vice versa)</li>
+                <li>If you keep your hand down, your friend <strong>does nothing</strong> and stays exactly as they were</li>
+            </ul>
+            <p>This is the essence of a CNOT gate:</p>
+            <ul>
+                <li><strong>Control qubit</strong>: You (the one making decisions)</li>
+                <li><strong>Target qubit</strong>: Your copycat friend (the one who reacts)</li>
+            </ul>
+            <p>The control qubit decides whether to flip the target. If the control is |1⟩, the target flips. If the control is |0⟩, nothing happens.</p>
+
+            <h3>The Truth Table</h3>
+            <p>In classical terms, the CNOT gate follows this simple logic:</p>
+            <pre><code># CNOT Truth Table
+# Input: (Control, Target) → Output: (Control, Target)
+
+# Control = 0: Target unchanged
+(0, 0) → (0, 0)  # Control off, target off → stays off
+(0, 1) → (0, 1)  # Control off, target on  → stays on
+
+# Control = 1: Target flipped
+(1, 0) → (1, 1)  # Control on, target off → target flips to on
+(1, 1) → (1, 0)  # Control on, target on  → target flips to off</code></pre>
+            <p>Notice that the control qubit <strong>never changes</strong>—it only controls whether the target flips. This asymmetry is crucial.</p>
+
+            <h2>Enter Superposition: The Magic Ingredient</h2>
+            <p>Here's where things get interesting. What happens if the control qubit isn't definitely 0 or 1, but is in a <strong>superposition</strong> of both?</p>
+            <p>Think back to our copycat analogy. What if you're not standing still with your hand up or down, but instead you're <em>spinning</em>—simultaneously in a state of "hand up" and "hand down" until someone looks at you?</p>
+            <p>In quantum terms:</p>
+            <pre><code># Classical bit: definitely 0 or 1
+classical_control = 0
+
+# Quantum superposition: both at once!
+# After applying Hadamard gate:
+# |control⟩ = (1/√2)|0⟩ + (1/√2)|1⟩
+# 50% chance of 0, 50% chance of 1 when measured</code></pre>
+            <p>When your copycat friend sees you in superposition, something remarkable happens—<strong>they become entangled with you</strong>. They can't simply "copy" a definite state, so they enter a correlated superposition themselves.</p>
+
+            <h2>Creating a Bell State: The Recipe</h2>
+            <p>A <strong>Bell state</strong> is the simplest entangled state of two qubits. Here's the recipe:</p>
+            <ol>
+                <li><strong>Start with two qubits</strong>, both in the |0⟩ state</li>
+                <li><strong>Apply a Hadamard gate</strong> to the first qubit (put it in superposition)</li>
+                <li><strong>Apply a CNOT gate</strong> with the first qubit as control and second as target</li>
+            </ol>
+            <p>Let's trace through this step by step:</p>
+            <pre><code># Step 0: Initial state
+|ψ₀⟩ = |00⟩
+# Both qubits are definitely 0
+
+# Step 1: Apply Hadamard to first qubit
+|ψ₁⟩ = (1/√2)(|0⟩ + |1⟩) ⊗ |0⟩
+     = (1/√2)(|00⟩ + |10⟩)
+# First qubit in superposition, second still |0⟩
+
+# Step 2: Apply CNOT (first controls second)
+|ψ₂⟩ = (1/√2)(|00⟩ + |11⟩)
+# This is the Bell state |Φ⁺⟩!</code></pre>
+            <p>The result is fascinating: the two qubits are now in a state where they're <strong>either both 0 or both 1</strong>, but we don't know which until we measure. This is the <strong>Bell state |Φ⁺⟩</strong> (pronounced "phi plus").</p>
+
+            <h2>The Dancing Partners Analogy</h2>
+            <p>Imagine two dancers performing a synchronized routine, but with a twist:</p>
+            <ul>
+                <li>Before the music starts, they spin in place (superposition)</li>
+                <li>The moment anyone looks at them, they <em>instantly</em> freeze in matching poses</li>
+                <li>If dancer A freezes with arms up, dancer B <em>always</em> has arms up too</li>
+                <li>If dancer A freezes with arms down, dancer B <em>always</em> has arms down</li>
+            </ul>
+            <p>The spooky part? <strong>This happens even if the dancers are in different rooms—or different galaxies.</strong> The moment you observe one, the other instantly "knows" to match, with no signal traveling between them.</p>
+            <p>This is quantum entanglement. Einstein famously called it "spooky action at a distance" and refused to believe it was real. Experiments have since proven him wrong.</p>
+
+            <h2>The Correlated Coin Analogy</h2>
+            <p>Here's another way to think about Bell states:</p>
+            <p>Imagine a magical coin factory that produces pairs of coins with an unusual property:</p>
+            <ul>
+                <li>Each coin spins forever until you look at it</li>
+                <li>When you look, it lands on heads or tails (50/50 chance)</li>
+                <li>But here's the magic: <strong>paired coins always land the same way</strong></li>
+            </ul>
+            <p>You could send one coin to Tokyo and one to New York. Flip them at the exact same moment, and they'll <em>always</em> match. Heads-heads or tails-tails, never heads-tails.</p>
+            <p>Classical physics can't explain this without hidden communication. Quantum mechanics says no communication is needed—the correlation was built in when the coins were created as a Bell pair.</p>
+            <pre><code># Classical correlated coins: hidden variable theory
+coin_a = random.choice(['heads', 'tails'])
+coin_b = coin_a  # Copy at creation time
+
+# Quantum Bell state: no hidden variable!
+# The correlation exists without either coin having
+# a definite value until measured
+# |Φ⁺⟩ = (1/√2)(|HH⟩ + |TT⟩)</code></pre>
+
+            <h2>Qiskit Implementation: Building Bell States</h2>
+            <p>Let's see this in action with real quantum code using IBM's Qiskit framework.</p>
+            <h3>Example 1: Creating and Measuring a Bell State</h3>
+            <pre><code>from qiskit import QuantumCircuit, Aer, execute
+from qiskit.visualization import plot_histogram
+
+# Create a quantum circuit with 2 qubits and 2 classical bits
+# We need 2 qubits for our Bell pair
+circuit = QuantumCircuit(2, 2)
+
+# Step 1: Apply Hadamard gate to qubit 0
+# This creates superposition: |0⟩ → (|0⟩ + |1⟩)/√2
+circuit.h(0)
+
+# Step 2: Apply CNOT with qubit 0 as control, qubit 1 as target
+# This entangles the qubits into a Bell state
+circuit.cx(0, 1)  # cx is the CNOT gate in Qiskit
+
+# Step 3: Measure both qubits
+circuit.measure([0, 1], [0, 1])
+
+# Visualize the circuit
+print(circuit.draw())
+
+# Simulate the circuit
+simulator = Aer.get_backend('qasm_simulator')
+result = execute(circuit, backend=simulator, shots=1024).result()
+counts = result.get_counts()
+
+print("Results:", counts)
+# Expected output: approximately {'00': 512, '11': 512}
+# We ONLY see 00 or 11, never 01 or 10!</code></pre>
+            <p>Run this code and you'll see something remarkable: out of 1024 measurements, you'll get approximately 512 results of "00" and 512 results of "11"—but <strong>never "01" or "10"</strong>. The qubits are perfectly correlated despite each individual measurement being random.</p>
+
+            <h3>Example 2: All Four Bell States</h3>
+            <p>There are actually four Bell states, each representing a different type of perfect correlation:</p>
+            <pre><code>from qiskit import QuantumCircuit, Aer, execute
+
+def create_bell_state(bell_type):
+    """
+    Create one of the four Bell states.
+
+    Bell states:
+    |Φ⁺⟩ = (|00⟩ + |11⟩)/√2  - Same, positive
+    |Φ⁻⟩ = (|00⟩ - |11⟩)/√2  - Same, negative phase
+    |Ψ⁺⟩ = (|01⟩ + |10⟩)/√2  - Opposite, positive
+    |Ψ⁻⟩ = (|01⟩ - |10⟩)/√2  - Opposite, negative phase
+    """
+    circuit = QuantumCircuit(2, 2)
+
+    # Start with Hadamard on first qubit
+    circuit.h(0)
+
+    # Apply CNOT to entangle
+    circuit.cx(0, 1)
+
+    # Modify based on which Bell state we want
+    if bell_type == 'phi_minus':
+        # Add a Z gate to create phase difference
+        circuit.z(0)
+    elif bell_type == 'psi_plus':
+        # Add an X gate to flip correlation
+        circuit.x(1)
+    elif bell_type == 'psi_minus':
+        # Add both X and Z gates
+        circuit.x(1)
+        circuit.z(0)
+    # 'phi_plus' needs no additional gates
+
+    return circuit
+
+# Create and test each Bell state
+simulator = Aer.get_backend('qasm_simulator')
+
+for bell_type in ['phi_plus', 'phi_minus', 'psi_plus', 'psi_minus']:
+    circuit = create_bell_state(bell_type)
+    circuit.measure([0, 1], [0, 1])
+
+    result = execute(circuit, backend=simulator, shots=1024).result()
+    counts = result.get_counts()
+
+    print(f"{bell_type}: {counts}")
+
+# Expected outputs:
+# phi_plus:  {'00': ~512, '11': ~512}  - Same values
+# phi_minus: {'00': ~512, '11': ~512}  - Same values (phase invisible)
+# psi_plus:  {'01': ~512, '10': ~512}  - Opposite values!
+# psi_minus: {'01': ~512, '10': ~512}  - Opposite values!</code></pre>
+            <p>Notice that |Ψ⁺⟩ and |Ψ⁻⟩ produce <em>opposite</em> correlations: when one qubit is 0, the other is always 1, and vice versa. It's like our dancing partners now do <em>mirror</em> moves instead of matching moves.</p>
+
+            <h3>Example 3: Proving Entanglement is Real</h3>
+            <p>Here's a simple demonstration that entanglement isn't just classical correlation:</p>
+            <pre><code>from qiskit import QuantumCircuit, Aer, execute
+import numpy as np
+
+# Create Bell state
+circuit = QuantumCircuit(2, 2)
+circuit.h(0)
+circuit.cx(0, 1)
+
+# Now measure in a DIFFERENT basis (X-basis instead of Z-basis)
+# Apply Hadamard before measuring to change measurement basis
+circuit.h(0)
+circuit.h(1)
+
+circuit.measure([0, 1], [0, 1])
+
+simulator = Aer.get_backend('qasm_simulator')
+result = execute(circuit, backend=simulator, shots=1024).result()
+counts = result.get_counts()
+
+print("X-basis measurement:", counts)
+# For |Φ⁺⟩ measured in X-basis:
+# Expected: {'00': ~512, '11': ~512}
+# Still perfectly correlated in a different basis!
+
+# Classical hidden variables CAN'T reproduce this behavior
+# across multiple measurement bases - this is Bell's theorem!</code></pre>
+            <p>This is the key insight of <strong>Bell's theorem</strong>: if the correlations were due to hidden classical information, they couldn't persist when we change how we measure. But quantum entanglement maintains perfect correlation <em>regardless</em> of measurement basis—something no classical theory can explain.</p>
+
+            <h2>Why Bell States Matter</h2>
+            <p>Bell states aren't just a curiosity—they're the foundation of quantum technology:</p>
+            <ul>
+                <li><strong>Quantum Teleportation</strong>: A Bell pair acts as a "quantum channel" to teleport quantum states without physically moving particles</li>
+                <li><strong>Quantum Cryptography</strong>: Bell states enable perfectly secure key distribution (BB84 and E91 protocols)</li>
+                <li><strong>Quantum Computing</strong>: Most quantum algorithms use entanglement; Bell states are the simplest building block</li>
+                <li><strong>Quantum Error Correction</strong>: Entangled states help protect quantum information from noise</li>
+            </ul>
+
+            <h2>The Physical Intuition</h2>
+            <p>Why does CNOT + Hadamard create entanglement? Here's the key insight:</p>
+            <p>The Hadamard gate creates a <strong>branching path</strong>—the qubit goes both ways at once (|0⟩ and |1⟩). The CNOT gate then <strong>ties the second qubit's fate to each branch</strong>:</p>
+            <ul>
+                <li>In the |0⟩ branch: second qubit stays |0⟩ → we get |00⟩</li>
+                <li>In the |1⟩ branch: second qubit flips to |1⟩ → we get |11⟩</li>
+            </ul>
+            <p>Both branches exist simultaneously until measurement. The second qubit doesn't have its own independent state anymore—it's defined only in relation to the first. That's entanglement.</p>
+            <pre><code># Think of it like a story with two possible endings
+# that haven't been written yet:
+
+story = {
+    'branch_A': {'hero': 'survives', 'sidekick': 'survives'},
+    'branch_B': {'hero': 'falls', 'sidekick': 'falls'}
+}
+
+# Until you read the ending, both exist.
+# Once you learn the hero's fate, you INSTANTLY know the sidekick's.
+# But the sidekick's fate was never independent—
+# it was always tied to the hero's.</code></pre>
+
+            <h2>Summary: Key Takeaways</h2>
+            <p><strong>The CNOT gate in three sentences:</strong></p>
+            <ol>
+                <li><strong>It's a conditional flip</strong>: The control qubit decides whether the target qubit gets flipped (like a copycat who only acts when you raise your hand)</li>
+                <li><strong>With superposition, it creates entanglement</strong>: When the control qubit is in superposition, the CNOT ties the target's fate to the control's, creating correlated uncertainty</li>
+                <li><strong>Bell states are the result</strong>: The simplest entangled states where two qubits are perfectly correlated, like magical coins that always match</li>
+            </ol>
+            <p><strong>The Bell state recipe:</strong></p>
+            <pre><code>Hadamard(qubit_0) + CNOT(qubit_0 → qubit_1) = Bell State
+Superposition    +  Conditional correlation  = Entanglement</code></pre>
+            <p>Einstein thought entanglement was too weird to be real. A century of experiments proved it's not just real—it's the foundation of quantum technology. And it all starts with two simple gates: Hadamard and CNOT.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/blog/" class="button back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            </div>
+        </article>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="logo-text">YeahWick's Blog</div>
+            <p>Where technology meets creativity</p>
+
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+
+            <p>&copy; 2025 YeahWick's Blog. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
