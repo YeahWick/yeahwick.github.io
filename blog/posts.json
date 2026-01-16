@@ -1,5 +1,13 @@
 [
   {
+    "title": "Mobile-First Blogging with Claude Code",
+    "date": "January 16, 2026",
+    "views": "0 views",
+    "excerpt": "Blogging from your mobile device with Claude Code as your AI co-author. Explore how personal consumption meets public archive, why constraints lead to better writing, and the plan to test other LLMs in the pipeline.",
+    "url": "/blog/mobile-blogging-with-claude.html",
+    "readTime": "6 min read"
+  },
+  {
     "title": "Mutation Testing: How to Know If Your Tests Actually Work",
     "date": "January 16, 2026",
     "views": "0 views",
