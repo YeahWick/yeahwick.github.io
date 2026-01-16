@@ -1,5 +1,13 @@
 [
   {
+    "title": "Mutation Testing: How to Know If Your Tests Actually Work",
+    "date": "January 16, 2026",
+    "views": "0 views",
+    "excerpt": "Code coverage tells you which lines your tests execute, but not whether they verify anything meaningful. Mutation testing introduces deliberate bugs to check if your tests catch them. Learn how AST parsing enables robust code transformations and why a 95% coverage score might be lying to you.",
+    "url": "/blog/mutation-testing-for-better-tests.html",
+    "readTime": "12 min read"
+  },
+  {
     "title": "Debugging Python in Docker Containers with Doom Emacs",
     "date": "January 15, 2026",
     "views": "0 views",
