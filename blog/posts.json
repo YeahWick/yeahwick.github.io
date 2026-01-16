@@ -1,5 +1,21 @@
 [
   {
+    "title": "Debugging Python in Docker Containers with Doom Emacs",
+    "date": "January 15, 2026",
+    "views": "0 views",
+    "excerpt": "Take your Doom Emacs debugging skills into Docker containers. Learn how to set up remote debugging with debugpy, configure path mappings, and debug Flask, Django, and Celery applications running in containers—all with the same DAP workflow you know and love.",
+    "url": "/blog/debugging-python-docker-doom-emacs.html",
+    "readTime": "12 min read"
+  },
+  {
+    "title": "Debugging Python in Doom Emacs with LSP and DAP",
+    "date": "January 15, 2026",
+    "views": "0 views",
+    "excerpt": "Master debugging in Doom Emacs using the Debug Adapter Protocol (DAP) with LSP integration. Learn how to set breakpoints, step through code, inspect variables, and use the REPL to debug Python programs without leaving your favorite editor.",
+    "url": "/blog/doom-emacs-debugging-guide.html",
+    "readTime": "10 min read"
+  },
+  {
     "title": "The CNOT Gate: Building Quantum Twins with Bell States",
     "date": "January 15, 2026",
     "views": "0 views",
