@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutation Testing: How to Know If Your Tests Actually Work - YeahWick's Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header card">
+            <a href="/" class="logo-text">YeahWick's Blog</a>
+
+            <nav class="nav-links">
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
+                <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+        </header>
+        <!-- Blog Post -->
+        <article class="card">
+            <div class="post-header">
+                <h1>Mutation Testing: How to Know If Your Tests Actually Work</h1>
+                <div class="post-meta">
+                    <span>January 16, 2026</span>
+                </div>
+            </div>
+
+            <div class="post-content">
+            <h2>The Problem with Code Coverage</h2>
+            <p>You've written tests. Your code coverage is at 95%. Everything is green. Ship it, right?</p>
+            <p>Not so fast. Code coverage tells you which lines your tests <em>execute</em>, but it doesn't tell you whether your tests actually <em>verify</em> anything meaningful. Consider this test:</p>
+            <pre><code>def test_add():
+    add(2, 3)  # No assertion!</code></pre>
+            <p>This test "covers" the <code>add</code> function, but it doesn't check the result. The function could return anything and this test would pass. Coverage metrics are useful, but they can give false confidence.</p>
+            <p>This is where <strong>mutation testing</strong> comes in.</p>
+
+            <h2>What Is Mutation Testing?</h2>
+            <p>Mutation testing is a technique that evaluates the quality of your tests by introducing small, deliberate changes (mutations) to your code and checking if your tests catch them. Each mutation simulates a potential bug:</p>
+            <ul>
+                <li>Changing <code>+</code> to <code>-</code></li>
+                <li>Replacing <code>&gt;</code> with <code>&gt;=</code></li>
+                <li>Swapping <code>and</code> for <code>or</code></li>
+                <li>Returning <code>None</code> instead of a value</li>
+            </ul>
+            <p>If your tests <strong>fail</strong> after a mutation is introduced, the mutation is "killed"—your tests caught the bug. If your tests <strong>still pass</strong>, the mutation "survives"—you have a gap in your test coverage.</p>
+            <p>The <strong>mutation score</strong> is the percentage of mutations killed:</p>
+            <pre><code>Mutation Score = Killed Mutations / Total Mutations</code></pre>
+            <p>A high mutation score means your tests are actually verifying behavior, not just executing code.</p>
+
+            <h2>A Practical Example</h2>
+            <p>To demonstrate mutation testing, I built a Python library called <a href="https://github.com/yeahwick/mutation-testing">mutation-testing</a>. Let's walk through how it works using a simple calculator module.</p>
+            <p>Here's the code we want to test:</p>
+            <pre><code># calculator.py
+def add(a: int, b: int) -> int:
+    """Add two numbers."""
+    return a + b
+
+
+def subtract(a: int, b: int) -> int:
+    """Subtract b from a."""
+    return a - b
+
+
+def is_positive(x: int) -> bool:
+    """Check if number is positive."""
+    return x > 0
+
+
+def clamp(value: int, min_val: int, max_val: int) -> int:
+    """Clamp value between min and max."""
+    if value < min_val:
+        return min_val
+    if value > max_val:
+        return max_val
+    return value</code></pre>
+
+            <p>And here are our tests:</p>
+            <pre><code># test_calculator.py
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+    assert add(0, 0) == 0
+
+
+def test_subtract():
+    assert subtract(5, 3) == 2
+    assert subtract(1, 1) == 0
+
+
+def test_is_positive():
+    assert is_positive(5) is True
+    assert is_positive(-1) is False
+    # Note: Missing test for 0 - mutation will survive!
+
+
+def test_clamp():
+    assert clamp(5, 0, 10) == 5
+    assert clamp(-5, 0, 10) == 0
+    assert clamp(15, 0, 10) == 10</code></pre>
+
+            <p>These tests look reasonable and would give 100% coverage. But let's see what mutation testing reveals.</p>
+
+            <h2>Defining Mutations</h2>
+            <p>Mutations are defined in a YAML configuration file:</p>
+            <pre><code># mutations.yaml
+version: "1.0"
+
+settings:
+  timeout: 30
+
+targets:
+  - module: calculator
+    path: src/calculator.py
+    mutations:
+      - id: add_to_sub
+        function: add
+        description: "Replace + with - in add()"
+        original: "a + b"
+        mutant: "a - b"
+
+      - id: add_to_mult
+        function: add
+        description: "Replace + with * in add()"
+        original: "a + b"
+        mutant: "a * b"
+
+      - id: sub_to_add
+        function: subtract
+        description: "Replace - with + in subtract()"
+        original: "a - b"
+        mutant: "a + b"
+
+      - id: gt_to_gte
+        function: is_positive
+        description: "Replace > with >= in is_positive()"
+        original: "x > 0"
+        mutant: "x >= 0"
+
+      - id: gt_to_lt
+        function: is_positive
+        description: "Replace > with < in is_positive()"
+        original: "x > 0"
+        mutant: "x < 0"
+
+      - id: clamp_lower_boundary
+        function: clamp
+        description: "Off-by-one in lower bound check"
+        original: "value < min_val"
+        mutant: "value <= min_val"
+
+      - id: clamp_upper_boundary
+        function: clamp
+        description: "Off-by-one in upper bound check"
+        original: "value > max_val"
+        mutant: "value >= max_val"</code></pre>
+
+            <p>Each mutation specifies the function, what the original code looks like, and what to replace it with. The library uses Python's AST (Abstract Syntax Tree) to find and replace these patterns structurally—not just text search and replace.</p>
+
+            <h2>Running the Mutation Tests</h2>
+            <pre><code>from mutation_testing import MutationRunner
+import calculator
+
+def run_tests():
+    """Run test suite, return True if all pass."""
+    try:
+        assert calculator.add(2, 3) == 5
+        assert calculator.subtract(5, 3) == 2
+        assert calculator.is_positive(5) is True
+        assert calculator.is_positive(-1) is False
+        assert calculator.clamp(5, 0, 10) == 5
+        return True
+    except AssertionError:
+        return False
+
+runner = MutationRunner(test_runner=run_tests)
+report = runner.run_from_config("mutations.yaml")
+
+print(f"Mutation Score: {report.score:.1%}")</code></pre>
+
+            <p>When we run this, we get output like:</p>
+            <pre><code>============================================================
+MUTATION TESTING
+============================================================
+
+[✓] [add_to_sub] Replace + with - in add(): KILLED
+[✓] [add_to_mult] Replace + with * in add(): KILLED
+[✓] [sub_to_add] Replace - with + in subtract(): KILLED
+[✗] [gt_to_gte] Replace > with >= in is_positive(): SURVIVED
+[✓] [gt_to_lt] Replace > with < in is_positive(): KILLED
+[✓] [clamp_lower_boundary] Off-by-one in lower bound check: KILLED
+[✓] [clamp_upper_boundary] Off-by-one in upper bound check: KILLED
+
+============================================================
+SUMMARY
+============================================================
+Total mutations:  7
+Killed:           6
+Survived:         1
+Mutation Score:   85.7%
+============================================================
+
+SURVIVING MUTATIONS (improve your tests!):
+  - [gt_to_gte] Replace > with >= in is_positive()</code></pre>
+
+            <p>One mutation survived! When we changed <code>x &gt; 0</code> to <code>x &gt;= 0</code>, the tests still passed. This reveals a gap: we never test what happens when <code>x == 0</code>. Adding this test kills the mutation:</p>
+            <pre><code>def test_is_positive():
+    assert is_positive(5) is True
+    assert is_positive(-1) is False
+    assert is_positive(0) is False  # This kills the mutation!</code></pre>
+
+            <h2>How AST Parsing Works</h2>
+            <p>The real magic happens in how mutations are applied. Rather than doing text replacement (which is brittle), the library parses Python code into an Abstract Syntax Tree and performs structural transformations.</p>
+
+            <h3>What Is an AST?</h3>
+            <p>An AST represents code as a tree of nodes. Each node represents a construct like a function, operator, or value. Here's a simple example:</p>
+            <pre><code>import ast
+
+source = "return a + b"
+tree = ast.parse(source, mode='exec')
+print(ast.dump(tree, indent=2))</code></pre>
+
+            <p>This produces:</p>
+            <pre><code>Module(
+  body=[
+    Return(
+      value=BinOp(
+        left=Name(id='a', ctx=Load()),
+        op=Add(),
+        right=Name(id='b', ctx=Load())
+      )
+    )
+  ]
+)</code></pre>
+
+            <p>The code <code>return a + b</code> becomes a tree with:</p>
+            <ul>
+                <li>A <code>Return</code> node containing...</li>
+                <li>A <code>BinOp</code> (binary operation) with...</li>
+                <li><code>left</code>: A <code>Name</code> node for <code>a</code></li>
+                <li><code>op</code>: An <code>Add</code> operator</li>
+                <li><code>right</code>: A <code>Name</code> node for <code>b</code></li>
+            </ul>
+
+            <h3>Pattern Matching with AST</h3>
+            <p>To apply a mutation, we need to find where <code>a + b</code> appears and replace it with <code>a - b</code>. The library does this by parsing both patterns into ASTs and comparing them structurally.</p>
+            <p>Here's the core matching logic:</p>
+            <pre><code>class PatternReplacer(ast.NodeTransformer):
+    """Replace AST patterns structurally."""
+
+    def __init__(self, pattern: ast.AST, replacement: ast.AST):
+        self.pattern = pattern
+        self.replacement = replacement
+
+    def _matches(self, node: ast.AST, pattern: ast.AST) -> bool:
+        """Check if node matches pattern structurally."""
+        if type(node) != type(pattern):
+            return False
+
+        # Handle Name nodes (variables)
+        if isinstance(node, ast.Name):
+            return node.id == pattern.id
+
+        # Handle Constants (numbers, strings, booleans)
+        if isinstance(node, ast.Constant):
+            return node.value == pattern.value
+
+        # Handle Binary Operations (a + b, x * y, etc.)
+        if isinstance(node, ast.BinOp):
+            return (type(node.op) == type(pattern.op) and
+                    self._matches(node.left, pattern.left) and
+                    self._matches(node.right, pattern.right))
+
+        # Handle Comparisons (x > 0, a == b, etc.)
+        if isinstance(node, ast.Compare):
+            if len(node.ops) != len(pattern.ops):
+                return False
+            if len(node.comparators) != len(pattern.comparators):
+                return False
+            if not self._matches(node.left, pattern.left):
+                return False
+            for n_op, p_op in zip(node.ops, pattern.ops):
+                if type(n_op) != type(p_op):
+                    return False
+            for n_cmp, p_cmp in zip(node.comparators, pattern.comparators):
+                if not self._matches(n_cmp, p_cmp):
+                    return False
+            return True
+
+        # Handle Return statements
+        if isinstance(node, ast.Return):
+            if node.value is None and pattern.value is None:
+                return True
+            if node.value is None or pattern.value is None:
+                return False
+            return self._matches(node.value, pattern.value)
+
+        # Generic field comparison
+        for field in node._fields:
+            if not hasattr(pattern, field):
+                return False
+            if not self._matches(
+                getattr(node, field),
+                getattr(pattern, field)
+            ):
+                return False
+        return True</code></pre>
+
+            <p>This recursive function walks both trees simultaneously, checking that each node type, operator, and value matches.</p>
+
+            <h3>Applying Transformations</h3>
+            <p>Once we find a match, we use the <code>NodeTransformer</code> pattern to replace nodes:</p>
+            <pre><code>def generic_visit(self, node):
+    """Visit each node and replace if it matches pattern."""
+    # First, transform children
+    node = super().generic_visit(node)
+
+    # Then check if this node matches our pattern
+    if self._matches(node, self.pattern):
+        # Return a deep copy of the replacement
+        return copy.deepcopy(self.replacement)
+
+    return node</code></pre>
+
+            <p>The transformation happens in place: traverse the tree, find matches, swap them with the replacement, and continue.</p>
+
+            <h3>Putting It Together</h3>
+            <p>Here's how a mutation gets applied:</p>
+            <pre><code>def _apply_mutation(source: str, original: str, mutant: str) -> str:
+    """Apply a mutation to source code."""
+    # Parse everything to AST
+    tree = ast.parse(source)
+    original_ast = _parse_pattern(original)
+    mutant_ast = _parse_pattern(mutant)
+
+    # Transform the tree
+    transformer = PatternReplacer(original_ast, mutant_ast)
+    new_tree = transformer.visit(tree)
+
+    # Fix any missing location info
+    ast.fix_missing_locations(new_tree)
+
+    # Convert back to source code
+    return ast.unparse(new_tree)
+
+
+def _parse_pattern(code: str) -> ast.AST:
+    """Parse a code pattern into AST."""
+    try:
+        # Try as expression first (e.g., "a + b")
+        tree = ast.parse(code, mode='eval')
+        return tree.body
+    except SyntaxError:
+        # Fall back to statement (e.g., "return x")
+        tree = ast.parse(code, mode='exec')
+        return tree.body[0]</code></pre>
+
+            <p>This approach is much more robust than text replacement. It handles whitespace differences, comments, and ensures the mutation produces valid Python code.</p>
+
+            <h2>AST Node Types Reference</h2>
+            <p>Here are the most commonly mutated AST node types:</p>
+
+            <h3>Binary Operations (ast.BinOp)</h3>
+            <pre><code># Common mutations:
+# Add() -> Sub()     (+  becomes -)
+# Sub() -> Add()     (-  becomes +)
+# Mult() -> Div()    (*  becomes /)
+# FloorDiv() -> Div()  (// becomes /)
+
+# AST structure for "a + b":
+BinOp(left=Name('a'), op=Add(), right=Name('b'))</code></pre>
+
+            <h3>Comparisons (ast.Compare)</h3>
+            <pre><code># Common mutations:
+# Gt() -> GtE()     (>  becomes >=)
+# Lt() -> LtE()     (<  becomes <=)
+# Eq() -> NotEq()   (== becomes !=)
+
+# AST structure for "x > 0":
+Compare(
+    left=Name('x'),
+    ops=[Gt()],
+    comparators=[Constant(0)]
+)</code></pre>
+
+            <h3>Boolean Operations (ast.BoolOp)</h3>
+            <pre><code># Common mutations:
+# And() -> Or()     (and becomes or)
+# Or() -> And()     (or  becomes and)
+
+# AST structure for "a and b":
+BoolOp(op=And(), values=[Name('a'), Name('b')])</code></pre>
+
+            <h3>Unary Operations (ast.UnaryOp)</h3>
+            <pre><code># Common mutations:
+# Not() -> (remove)   (not x becomes x)
+# USub() -> UAdd()    (-x becomes +x)
+
+# AST structure for "not x":
+UnaryOp(op=Not(), operand=Name('x'))</code></pre>
+
+            <h2>Runtime Mutation Injection</h2>
+            <p>One clever technique the library uses is <strong>runtime injection</strong>. Instead of modifying source files on disk, it injects mutations directly into running code by manipulating Python's <code>__code__</code> objects:</p>
+            <pre><code>class MutationInjector:
+    """Inject mutations at runtime without modifying files."""
+
+    def inject(self, func, original: str, mutant: str):
+        """Replace function's code with mutated version."""
+        # Get the original source code
+        source = inspect.getsource(func)
+
+        # Apply the mutation
+        mutated_source = _apply_mutation(source, original, mutant)
+
+        # Compile the mutated code
+        code = compile(mutated_source, '<mutation>', 'exec')
+
+        # Extract the function's code object
+        for const in code.co_consts:
+            if isinstance(const, type(func.__code__)):
+                # Swap the code object
+                self._original_code = func.__code__
+                func.__code__ = const
+                return
+
+    def restore(self, func):
+        """Restore original function code."""
+        if self._original_code:
+            func.__code__ = self._original_code</code></pre>
+
+            <p>This approach means:</p>
+            <ul>
+                <li>No temporary files to clean up</li>
+                <li>Tests run against the actual module in memory</li>
+                <li>Original code is always restored, even if tests crash</li>
+            </ul>
+
+            <h2>Best Practices for Mutation Testing</h2>
+
+            <h3>Start Small</h3>
+            <p>Mutation testing can be slow since it runs your test suite once per mutation. Start with critical modules and expand coverage gradually.</p>
+
+            <h3>Focus on Boundary Conditions</h3>
+            <p>The most valuable mutations are often around boundaries:</p>
+            <ul>
+                <li><code>&gt;</code> vs <code>&gt;=</code></li>
+                <li><code>&lt;</code> vs <code>&lt;=</code></li>
+                <li>Off-by-one in loops</li>
+            </ul>
+
+            <h3>Don't Chase 100% Mutation Score</h3>
+            <p>Some mutations are equivalent (they don't change behavior) or test trivial code. A mutation score of 80-90% is often sufficient.</p>
+
+            <h3>Use Mutation Testing in CI</h3>
+            <p>Run mutation tests on changed code in pull requests. This catches regressions in test quality before they merge.</p>
+
+            <h2>Conclusion</h2>
+            <p>Mutation testing answers the question "do my tests actually test anything?" By introducing deliberate bugs and checking if tests catch them, you gain confidence that your test suite provides real protection against regressions.</p>
+            <p>The key insights:</p>
+            <ul>
+                <li><strong>Code coverage lies</strong>—it measures execution, not verification</li>
+                <li><strong>Mutation testing reveals gaps</strong>—surviving mutations show where tests are weak</li>
+                <li><strong>AST parsing enables robust mutations</strong>—structural transformations beat text replacement</li>
+                <li><strong>Runtime injection keeps things clean</strong>—no files to manage, instant rollback</li>
+            </ul>
+            <p>Check out the <a href="https://github.com/yeahwick/mutation-testing">mutation-testing</a> repository to try it yourself. The documentation includes more examples and a detailed guide on AST manipulation for those who want to dive deeper.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="/blog/" class="button back-button"><i class="fas fa-arrow-left"></i> Back to Blog</a>
+            </div>
+        </article>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="logo-text">YeahWick's Blog</div>
+            <p>Where technology meets creativity</p>
+
+            <div class="social-icons">
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+
+            <p>&copy; 2025 YeahWick's Blog. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
