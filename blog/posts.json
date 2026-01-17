@@ -1,5 +1,13 @@
 [
   {
+    "title": "The Hadamard Gate: Quantum's 45-Degree Turn",
+    "date": "January 17, 2026",
+    "views": "0 views",
+    "excerpt": "The Hadamard gate is the foundation of every quantum algorithm—it transforms certainty into superposition. But here's the insight most tutorials miss: applying a Hadamard to your qubit is mathematically equivalent to rotating your measurement device by 45 degrees. Through polarized sunglasses analogies and Qiskit code, discover why 'rotating the particle' and 'rotating the detector' are two sides of the same quantum coin.",
+    "url": "/blog/hadamard-gate-the-quantum-coin-flipper.html",
+    "readTime": "12 min read"
+  },
+  {
     "title": "Mutation Testing: How to Know If Your Tests Actually Work",
     "date": "January 16, 2026",
     "views": "0 views",
