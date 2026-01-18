@@ -8,6 +8,14 @@
     "readTime": "12 min read"
   },
   {
+    "title": "Building Modern Web Applications",
+    "date": "March 15, 2025",
+    "views": "0 views",
+    "excerpt": "In today's rapidly evolving tech landscape, building modern web applications requires a combination of cutting-edge technologies and well-established best practices. Learn how to create robust, scalable, and maintainable web applications by choosing the right technology stack, following key development principles, and incorporating emerging technologies like WebAssembly and serverless architectures.",
+    "url": "/blog/building-modern-web-applications.html",
+    "readTime": "8 min read"
+  },
+  {
     "title": "Mutation Testing: How to Know If Your Tests Actually Work",
     "date": "January 16, 2026",
     "views": "0 views",
