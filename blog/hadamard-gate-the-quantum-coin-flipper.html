@@ -30,7 +30,7 @@
 
             <div class="post-content">
             <h2>The Gate That Creates Possibility</h2>
-            <p>Every quantum algorithm you'll ever encounter uses the <strong>Hadamard gate</strong>. It's the gate that transforms certainty into possibility, that takes a qubit sitting comfortably in |0⟩ or |1⟩ and throws it into a superposition of both. But here's the profound insight most tutorials miss: <strong>applying a Hadamard gate to your qubit is mathematically equivalent to rotating your measurement device by 45 degrees.</strong></p>
+            <p>Every quantum algorithm you'll ever encounter uses the <strong>Hadamard gate</strong>. It's the gate that transforms certainty into possibility, that takes a qubit sitting comfortably in |0⟩ or |1⟩ and throws it into a superposition of both. But here's the profound insight most tutorials miss: <strong>applying a Hadamard gate to your qubit is mathematically equivalent to rotating your measurement basis by 90 degrees on the Bloch sphere.</strong></p>
             <p>This isn't just a mathematical curiosity—it's the key to understanding why quantum computing works. Let's explore the Hadamard gate through classical analogies, and discover why "rotating the particle" and "rotating the detector" are two sides of the same quantum coin.</p>
 
             <h2>The Polarized Sunglasses Analogy</h2>
@@ -55,7 +55,7 @@
                 <li>Rotating the light = applying a Hadamard gate to your qubit</li>
                 <li>Rotating your sunglasses = changing your measurement basis</li>
             </ul>
-            <p>The Hadamard gate is that 45-degree rotation for qubits. When you can't physically rotate your measurement device, you rotate the quantum state instead—and the physics is identical.</p>
+            <p>The Hadamard gate creates this rotation for qubits. In the classical polarization picture, 45-degree light gives 50/50 results—but on the quantum Bloch sphere, this corresponds to a 90-degree separation between the Z-basis and X-basis states. When you can't physically rotate your measurement device, you rotate the quantum state instead—and the physics is identical.</p>
 
             <h2>What the Hadamard Gate Actually Does</h2>
             <p>Let's be concrete about the transformation:</p>
@@ -85,7 +85,7 @@ H(H|0⟩) = H((|0⟩ + |1⟩)/√2)
         = |0⟩
 
 # Back to the original state!</code></pre>
-            <p>In our sunglasses analogy: rotate 45 degrees, then rotate 45 degrees again in the same direction—you're back to 90 degrees total, which is perpendicular to where you started. But the Hadamard is special: it rotates in a way that two applications bring you full circle.</p>
+            <p>The Hadamard is special: it rotates in such a way that two applications bring you full circle. Mathematically, rotating 90 degrees on the Bloch sphere twice (in the right way) can return you to your starting point—this is unique to the Hadamard's geometric properties.</p>
 
             <h2>The Classical Setup: Moving the Detector</h2>
             <p>Let's make the "rotating the measurement device" concept more concrete with a macroscopic thought experiment.</p>
@@ -98,16 +98,16 @@ H(H|0⟩) = H((|0⟩ + |1⟩)/√2)
                 <li>Result: 100% certainty—you get UP or DOWN depending on the spin direction</li>
             </ul>
 
-            <h3>Scenario 2: Detector at 45 Degrees</h3>
+            <h3>Scenario 2: Detector at 90 Degrees</h3>
             <ul>
                 <li>Ball spins along the vertical axis</li>
-                <li>Detector tilted 45 degrees from vertical</li>
+                <li>Detector tilted 90 degrees from vertical (perpendicular)</li>
                 <li>Result: 50% UP, 50% DOWN—the spin is "between" the detector's measurement options</li>
             </ul>
 
             <h3>Scenario 3: Rotate the Ball Instead</h3>
             <ul>
-                <li>Ball's spin axis rotated 45 degrees (using some magnetic field manipulation)</li>
+                <li>Ball's spin axis rotated 90 degrees (using some magnetic field manipulation)</li>
                 <li>Detector stays vertical</li>
                 <li>Result: 50% UP, 50% DOWN—identical to Scenario 2!</li>
             </ul>
@@ -121,7 +121,7 @@ H(H|0⟩) = H((|0⟩ + |1⟩)/√2)
 # The X-basis: "Are you |+⟩ or |−⟩?"
 # where |+⟩ = (|0⟩ + |1⟩)/√2  and  |−⟩ = (|0⟩ - |1⟩)/√2
 
-# These bases are "rotated" 45 degrees from each other</code></pre>
+# These bases are separated by 90 degrees on the Bloch sphere</code></pre>
             <p>Here's the punchline:</p>
             <ul>
                 <li><strong>Measuring in the X-basis</strong> = Apply Hadamard, then measure in Z-basis</li>
@@ -218,7 +218,8 @@ print("Measuring |+⟩ in X-basis:", result_x.get_counts())
 # Imagine our qubit is polarized light:
 # - |0⟩ = vertical polarization
 # - |1⟩ = horizontal polarization
-# - |+⟩ = 45-degree polarization
+# - |+⟩ = 45-degree polarization (classical angle)
+#        = 90 degrees from |0⟩ on the Bloch sphere
 #
 # Our "measurement device" is polarized sunglasses
 
@@ -250,13 +251,13 @@ print("Vertical light, vertical detector:",
       measure_with_rotated_detector([], []))
 # Output: {'0': 1024} - 100% passes through
 
-# Scenario: |0⟩ state, detector rotated 45° (Hadamard)
-print("Vertical light, 45° detector:",
+# Scenario: |0⟩ state, detector rotated to X-basis (Hadamard)
+print("Vertical light, X-basis detector:",
       measure_with_rotated_detector([], ['h']))
 # Output: ~{'0': 512, '1': 512} - 50/50
 
-# Scenario: |+⟩ state (45° light), detector vertical
-print("45° light, vertical detector:",
+# Scenario: |+⟩ state (X-basis state), detector vertical
+print("X-basis light, vertical detector:",
       measure_with_rotated_detector(['h'], []))
 # Output: ~{'0': 512, '1': 512} - same 50/50!
 
@@ -287,7 +288,7 @@ print("45° light, vertical detector:",
             <h2>Summary: Key Takeaways</h2>
             <p><strong>The Hadamard gate in three sentences:</strong></p>
             <ol>
-                <li><strong>It's a 45-degree rotation</strong>: The Hadamard transforms basis states into equal superpositions, like rotating polarized light by 45 degrees.</li>
+                <li><strong>It's a 90-degree basis rotation</strong>: The Hadamard transforms basis states into equal superpositions. On the Bloch sphere, it rotates the measurement basis by 90 degrees (though the classical polarization analogy uses 45-degree angles due to the half-angle parameterization of quantum states).</li>
                 <li><strong>Rotating state = rotating measurement</strong>: Applying Hadamard to your qubit before measuring in the Z-basis is equivalent to measuring in the X-basis. You can rotate the particle or rotate the detector—only the relative angle matters.</li>
                 <li><strong>It's reversible</strong>: Apply Hadamard twice and you're back where you started. This self-inverse property (H² = I) makes it a clean, symmetric operation.</li>
             </ol>
