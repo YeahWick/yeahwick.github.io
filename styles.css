@@ -19,8 +19,9 @@
     --shadow-hover: rgba(0, 0, 0, 0.15);
 }
 
+/* Dark mode when OS prefers dark AND no manual light mode override */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not(.light-mode) {
         /* Dark mode colors */
         --bg-primary: #0f1419;
         --bg-secondary: #1a1f2e;
@@ -38,6 +39,26 @@
         --shadow: rgba(0, 0, 0, 0.3);
         --shadow-hover: rgba(0, 0, 0, 0.5);
     }
+}
+
+/* Dark mode when manually enabled via toggle */
+:root.dark-mode {
+    /* Dark mode colors */
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a1f2e;
+    --text-primary: #e0e8f0;
+    --text-secondary: #b0bcc4;
+    --text-tertiary: #8896a4;
+    --border-color: #2d3748;
+    --nav-bg: #252d3d;
+    --code-bg: #0d1117;
+    --code-text: #c9d1d9;
+    --code-inline-bg: #2d333b;
+    --code-inline-text: #ff7b72;
+    --accent: #58a6ff;
+    --accent-dark: #3b82f6;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-hover: rgba(0, 0, 0, 0.5);
 }
 
 * {

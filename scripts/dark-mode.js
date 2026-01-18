@@ -1,39 +1,51 @@
 // Dark Mode Toggle Script
 (function() {
-    const DARK_MODE_CLASS = 'dark-mode-active';
     const STORAGE_KEY = 'theme-preference';
 
-    // Check for saved theme preference or OS preference
+    // Get saved theme preference: 'dark', 'light', or null (auto/OS preference)
     function getThemePreference() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            return saved;
-        }
-
-        // Check OS preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        }
-
-        return 'light';
+        return localStorage.getItem(STORAGE_KEY);
     }
 
-    // Apply theme
+    // Check if dark mode is currently active (from manual setting or OS preference)
+    function isDarkModeActive() {
+        const html = document.documentElement;
+
+        // If manually set to dark
+        if (html.classList.contains('dark-mode')) {
+            return true;
+        }
+
+        // If manually set to light
+        if (html.classList.contains('light-mode')) {
+            return false;
+        }
+
+        // Otherwise, check OS preference
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    // Apply theme by adding appropriate class to html element
     function applyTheme(theme) {
         const html = document.documentElement;
+
+        // Remove both classes first
+        html.classList.remove('dark-mode', 'light-mode');
+
         if (theme === 'dark') {
-            html.style.colorScheme = 'dark';
-        } else {
-            html.style.colorScheme = 'light';
+            html.classList.add('dark-mode');
+        } else if (theme === 'light') {
+            html.classList.add('light-mode');
         }
+        // If theme is null/undefined, no class is added and OS preference takes over
     }
 
-    // Update toggle button icon
+    // Update toggle button icon based on current active state
     function updateToggleIcon() {
         const toggle = document.getElementById('dark-mode-toggle');
         if (!toggle) return;
 
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = isDarkModeActive();
         const icon = toggle.querySelector('i');
 
         if (isDark) {
@@ -45,22 +57,17 @@
         }
     }
 
-    // Toggle dark mode
+    // Toggle between dark and light modes
     function toggleDarkMode() {
-        const toggle = document.getElementById('dark-mode-toggle');
-        if (!toggle) return;
-
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = isDarkModeActive();
         const newTheme = isDark ? 'light' : 'dark';
 
         localStorage.setItem(STORAGE_KEY, newTheme);
-
-        // Update the color-scheme on html element
-        document.documentElement.style.colorScheme = newTheme;
+        applyTheme(newTheme);
         updateToggleIcon();
     }
 
-    // Initialize
+    // Initialize dark mode on page load
     function init() {
         const theme = getThemePreference();
         applyTheme(theme);
@@ -74,11 +81,12 @@
 
         // Listen for system theme changes
         if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                const newTheme = e.matches ? 'dark' : 'light';
-                localStorage.removeItem(STORAGE_KEY);
-                applyTheme(newTheme);
-                updateToggleIcon();
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const savedTheme = getThemePreference();
+                // Only update icon if user hasn't manually set a theme
+                if (!savedTheme) {
+                    updateToggleIcon();
+                }
             });
         }
     }
