@@ -18,6 +18,9 @@
                 <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
                 <a href="/rss.xml"><i class="fas fa-rss"></i> RSS</a>
                 <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+                <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </nav>
         </header>
 
@@ -58,6 +61,7 @@
         </footer>
     </div>
 
+    <script src="/scripts/dark-mode.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             loadBlogPosts();
@@ -95,7 +99,7 @@
             } catch (error) {
                 console.error('Error loading blog posts:', error);
                 const container = document.getElementById('blog-posts-container');
-                container.innerHTML = '<p style="text-align: center; color: #e74c3c;">Failed to load blog posts. Please try again later.</p>';
+                container.innerHTML = '<p style="text-align: center;">Failed to load blog posts. Please try again later.</p>';
             }
         }
     </script>
