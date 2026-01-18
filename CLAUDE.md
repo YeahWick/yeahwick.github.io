@@ -13,6 +13,8 @@ This repository contains a static blog website hosted on GitHub Pages. The site 
 - `index.html` - Main homepage with featured blog posts
 - `blog/index.html` - Archive page listing all blog posts
 - `blog/*.html` - Individual blog post pages
+- `blog/posts.json` - Metadata for all blog posts (title, date, excerpt, URL, read time)
+- `rss.xml` - RSS feed with all blog posts for syndication
 - `scripts/` - Automation scripts for blog post creation and PR management
 - `.devcontainer/` - Development container configuration
 
@@ -41,7 +43,34 @@ Two shell scripts in the `scripts/` directory include co-authorship attribution 
 - Similar functionality to `create-blog-pr.sh` but more generic
 - Also includes Claude co-authorship in commits
 
-### 3. Git Configuration
+### 3. Blog Post Metadata and RSS Feed
+
+#### `blog/posts.json`
+This file maintains metadata for all blog posts displayed on the blog archive page. Each entry contains:
+- `title` - The blog post title
+- `date` - Publication date (format: "Month Day, Year", e.g., "January 17, 2026")
+- `views` - View count (format: "N views" or "N.NK views")
+- `excerpt` - Short description of the post (used in archive listing)
+- `url` - Relative path to the blog post HTML file
+- `readTime` - Estimated reading time (e.g., "12 min read")
+
+#### `rss.xml`
+RSS feed for blog post syndication. Contains:
+- Channel metadata (title, description, link)
+- `lastBuildDate` - Date of most recent post (should match the newest post's date)
+- Individual items for each blog post with:
+  - `title` - Post title
+  - `link` - Full URL to post
+  - `guid` - Unique identifier (typically the post URL)
+  - `pubDate` - Publication date (RFC 2822 format: "Day, DD Mon YYYY HH:MM:SS GMT")
+  - `description` - Post excerpt
+
+**IMPORTANT:** When creating a new blog post, both `blog/posts.json` and `rss.xml` must be updated:
+1. Add entry to `blog/posts.json` with post metadata
+2. Add `<item>` entry to `rss.xml` at the top of the feed (most recent first)
+3. Update `lastBuildDate` in `rss.xml` to the new post's date
+
+### 4. Git Configuration
 The automation scripts automatically add the following to all commits:
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -59,9 +88,10 @@ This repository demonstrates integration with Claude through:
 
 1. **Development Environment Configuration** - Using devcontainers with Claude API endpoint settings
 2. **Attribution Practices** - Properly crediting Claude as a co-author in automated workflows
-3. **Automation Workflows** - Scripts that streamline content creation while maintaining attribution
+3. **Blog Post Management** - Structured metadata system with `posts.json` and RSS feed for content organization and syndication
+4. **Automation Workflows** - Scripts that streamline content creation while maintaining attribution
 
-The setup enables developers to leverage Claude for content generation while ensuring proper attribution and streamlined publishing workflows through GitHub.
+The setup enables developers to leverage Claude for content generation while ensuring proper attribution and streamlined publishing workflows through GitHub. Blog posts are maintained through both `posts.json` (for archive display) and `rss.xml` (for feed syndication).
 
 ## Known Issues and Best Practices
 

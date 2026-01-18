@@ -5,8 +5,15 @@
     <link>https://yeahwick.github.io</link>
     <description>Where technology meets creativity</description>
     <language>en-us</language>
-    <lastBuildDate>Fri, 16 Jan 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 17 Jan 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://yeahwick.github.io/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Hadamard Gate: Quantum's 45-Degree Turn</title>
+      <link>https://yeahwick.github.io/blog/hadamard-gate-the-quantum-coin-flipper.html</link>
+      <guid>https://yeahwick.github.io/blog/hadamard-gate-the-quantum-coin-flipper.html</guid>
+      <pubDate>Fri, 17 Jan 2026 00:00:00 GMT</pubDate>
+      <description>The Hadamard gate is the foundation of every quantum algorithm—it transforms certainty into superposition. But here's the insight most tutorials miss: applying a Hadamard to your qubit is mathematically equivalent to rotating your measurement device by 45 degrees. Through polarized sunglasses analogies and Qiskit code, discover why 'rotating the particle' and 'rotating the detector' are two sides of the same quantum coin.</description>
+    </item>
     <item>
       <title>Mutation Testing: How to Know If Your Tests Actually Work</title>
       <link>https://yeahwick.github.io/blog/mutation-testing-for-better-tests.html</link>
@@ -48,6 +55,13 @@
       <guid>https://yeahwick.github.io/blog/introduction-to-quantum-computing.html</guid>
       <pubDate>Sat, 05 Apr 2025 00:00:00 GMT</pubDate>
       <description>Quantum computing represents one of the most exciting frontiers in modern technology. Unlike classical computers that use bits as the smallest unit of information (0 or 1), quantum computers use quantum bits or qubits, which can exist in multiple states simultaneously. This fundamental difference opens up possibilities for solving certain problems exponentially faster than traditional computers...</description>
+    </item>
+    <item>
+      <title>Building Modern Web Applications</title>
+      <link>https://yeahwick.github.io/blog/building-modern-web-applications.html</link>
+      <guid>https://yeahwick.github.io/blog/building-modern-web-applications.html</guid>
+      <pubDate>Sat, 15 Mar 2025 00:00:00 GMT</pubDate>
+      <description>In today's rapidly evolving tech landscape, building modern web applications requires a combination of cutting-edge technologies and well-established best practices. Learn how to create robust, scalable, and maintainable web applications by choosing the right technology stack, following key development principles, and incorporating emerging technologies like WebAssembly and serverless architectures.</description>
     </item>
     <item>
       <title>Web Development Trends in 2025</title>
