@@ -18,6 +18,9 @@
                 <a href="/blog/"><i class="fas fa-blog"></i> Blog</a>
                 <a href="/rss.xml"><i class="fas fa-rss"></i> RSS</a>
                 <a href="/"><i class="fas fa-envelope"></i> Contact</a>
+                <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </nav>
         </header>
 
@@ -47,6 +50,7 @@
         </footer>
     </div>
 
+    <script src="/scripts/dark-mode.js"></script>
     <script>
         // Load posts from posts.json
         async function loadPosts() {
