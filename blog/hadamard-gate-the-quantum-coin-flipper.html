@@ -98,20 +98,21 @@ H(H|0⟩) = H((|0⟩ + |1⟩)/√2)
                 <li>Result: 100% certainty—you get UP or DOWN depending on the spin direction</li>
             </ul>
 
-            <h3>Scenario 2: Detector at 45 Degrees</h3>
+            <h3>Scenario 2: Detector at 90 Degrees</h3>
             <ul>
                 <li>Ball spins along the vertical axis</li>
-                <li>Detector tilted 45 degrees from vertical</li>
+                <li>Detector tilted 90 degrees from vertical</li>
                 <li>Result: 50% UP, 50% DOWN—the spin is "between" the detector's measurement options</li>
             </ul>
 
             <h3>Scenario 3: Rotate the Ball Instead</h3>
             <ul>
-                <li>Ball's spin axis rotated 45 degrees (using some magnetic field manipulation)</li>
+                <li>Ball's spin axis rotated 90 degrees (using some magnetic field manipulation)</li>
                 <li>Detector stays vertical</li>
                 <li>Result: 50% UP, 50% DOWN—identical to Scenario 2!</li>
             </ul>
             <p>In quantum computing, we can't usually rotate our measurement device (the physical qubit readout mechanism). So we rotate the quantum state instead using the Hadamard gate. <strong>The physics doesn't care which one you rotate—only the relative angle matters.</strong></p>
+            <p><em>(This thought experiment mirrors the real <a href="https://en.wikipedia.org/wiki/Stern%E2%80%93Gerlach_experiment">Stern-Gerlach experiment</a>—a far more reputable source than these Claude Opus 4.5 ramblings.)</em></p>
 
             <h2>The Z-Basis vs X-Basis: Two Ways to Ask a Question</h2>
             <p>This brings us to a crucial concept: measurement bases.</p>
@@ -121,7 +122,7 @@ H(H|0⟩) = H((|0⟩ + |1⟩)/√2)
 # The X-basis: "Are you |+⟩ or |−⟩?"
 # where |+⟩ = (|0⟩ + |1⟩)/√2  and  |−⟩ = (|0⟩ - |1⟩)/√2
 
-# These bases are "rotated" 45 degrees from each other</code></pre>
+# These bases are "rotated" 90 degrees from each other on the Bloch sphere</code></pre>
             <p>Here's the punchline:</p>
             <ul>
                 <li><strong>Measuring in the X-basis</strong> = Apply Hadamard, then measure in Z-basis</li>
